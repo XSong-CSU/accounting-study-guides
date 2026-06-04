@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 4 Workflow — Consolidations with a Noncontrolling Interest (Father / Sun)</title>
+<style>
+  :root{
+    --navy:#13294b; --navy2:#1f3a63; --teal:#0d7d7d; --teal-soft:#e6f3f3;
+    --gold:#c08a1e; --gold-soft:#fbf3df; --ink:#1c2530; --muted:#5a6675;
+    --line:#d8dee7; --bg:#f4f6f9; --card:#ffffff;
+    --tb:#1f6f4a; --tb-soft:#e7f3ec; --ex:#7a3da6; --ex-soft:#f3eafa;
+    --nci:#1f5fa6; --nci-soft:#e7eef8;
+    --ok:#1f8a4c; --warn:#b25b00;
+    --shadow:0 1px 3px rgba(20,40,70,.08),0 6px 20px rgba(20,40,70,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;font-size:15.5px}
+  a{color:var(--teal)}
+  header.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;
+    padding:26px 22px 22px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px}
+  header.hero .wrap{padding:0}
+  .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#9fc6e8;font-weight:700}
+  header h1{margin:.25em 0 .15em;font-size:27px;line-height:1.18}
+  header p.sub{margin:.2em 0 0;color:#cfe0f1;font-size:15px;max-width:760px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .legend .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12.5px}
+  .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;
+    padding:2px 9px;border-radius:999px;vertical-align:middle}
+  .badge.tb{background:var(--tb-soft);color:var(--tb);border:1px solid #bfe0cd}
+  .badge.ex{background:var(--ex-soft);color:var(--ex);border:1px solid #ddc7ee}
+  .badge.nci{background:var(--nci-soft);color:var(--nci);border:1px solid #c2d4ee}
+
+  nav.toc{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(20,40,70,.05)}
+  nav.toc .wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:9px 18px}
+  nav.toc a{font-size:12.5px;text-decoration:none;color:var(--navy);background:#eef2f7;
+    border:1px solid var(--line);padding:4px 10px;border-radius:7px;font-weight:600}
+  nav.toc a:hover{background:var(--teal-soft);border-color:#bfe0e0}
+
+  main{padding:24px 0 70px}
+  section.step{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:22px 24px;margin:18px 0}
+  .step-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+  .num{flex:none;width:40px;height:40px;border-radius:11px;background:var(--navy);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:18px}
+  .num.path{background:var(--teal)}
+  .num.ncin{background:var(--nci)}
+  .step-head h2{margin:.1em 0;font-size:20px}
+  .step-head .src{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .lead{color:var(--muted);margin:.2em 0 1em}
+
+  .callout{border-left:4px solid var(--teal);background:var(--teal-soft);
+    border-radius:0 8px 8px 0;padding:11px 14px;margin:12px 0;font-size:14px}
+  .callout.gold{border-color:var(--gold);background:var(--gold-soft)}
+  .callout.tb{border-color:var(--tb);background:var(--tb-soft)}
+  .callout.ex{border-color:var(--ex);background:var(--ex-soft)}
+  .callout.nci{border-color:var(--nci);background:var(--nci-soft)}
+
+  .reveal-btn{appearance:none;cursor:pointer;border:1px dashed var(--teal);color:var(--teal);
+    background:#fff;border-radius:8px;padding:7px 13px;font-weight:700;font-size:13.5px;margin-top:6px}
+  .reveal-btn:hover{background:var(--teal-soft)}
+  .reveal-body{display:none;margin-top:10px;border:1px solid #bfe0e0;background:#f6fbfb;
+    border-radius:10px;padding:12px 14px;font-size:14px}
+  .reveal-body.open{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .reveal-body h4{margin:.2em 0 .4em;color:var(--navy)}
+  .reveal-body code{background:#eef2f7;padding:1px 6px;border-radius:5px;font-size:13px}
+
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  th{background:#eef2f7;font-weight:700;color:var(--navy)}
+  td.num-cell,th.num-cell{text-align:right;font-variant-numeric:tabular-nums}
+  tr.total td{background:#f7f9fc;font-weight:800;border-top:2px solid var(--navy)}
+  tr.subtot td{background:#fbfcfe;font-weight:700}
+  .data-table td.cr{color:#9a3b3b}
+  input.fill{width:130px;text-align:right;border:1px solid var(--line);border-radius:6px;
+    padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums;background:#fffdf6}
+  input.fill:focus{outline:2px solid var(--teal);border-color:var(--teal);background:#fff}
+  input.fill.wide{width:100%}
+  input.fill.pct{width:70px}
+  .live{display:inline-block;min-width:120px;text-align:right;font-weight:800;
+    font-variant-numeric:tabular-nums;color:var(--navy);background:#eef6f6;border-radius:6px;padding:4px 9px}
+  .live.nci{color:var(--nci);background:var(--nci-soft)}
+  .verdict{margin-top:10px;font-weight:700}
+  .verdict.g{color:var(--ok)} .verdict.b{color:var(--warn)} .verdict.n{color:var(--muted)}
+
+  .tree{display:grid;gap:10px;margin:6px 0}
+  .opt{border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:#fafbfd}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft)}
+  .opt.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-soft)}
+  .opt b{color:var(--navy)}
+  .tree-out{display:none;margin-top:10px}
+  .tree-out.open{display:block}
+
+  .je{width:100%;font-size:14px}
+  .je td{vertical-align:middle}
+  .je .acct{width:auto}
+  .je .dr,.je .crc{width:140px}
+  .je .indent{padding-left:34px;color:var(--muted)}
+  .hint{color:var(--muted);font-size:12.5px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .checklist{list-style:none;padding:0;margin:8px 0}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);
+    border-radius:9px;margin-bottom:7px;background:#fafbfd}
+  .checklist input{margin-top:3px;width:18px;height:18px;accent-color:var(--teal)}
+  .checklist li.done{background:var(--tb-soft);border-color:#bfe0cd}
+  .progress{height:10px;border-radius:6px;background:#e6ebf2;overflow:hidden;margin:6px 0 2px}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--tb));transition:width .3s}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .btn{cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:8px;
+    padding:8px 14px;font-weight:700;font-size:13.5px}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn:hover{opacity:.92}
+  footer{color:var(--muted);font-size:12.5px;text-align:center;padding:24px 18px 50px}
+  .pill{font-size:11px;font-weight:700;background:#eef2f7;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--muted)}
+  details.data > summary{cursor:pointer;font-weight:700;color:var(--navy);padding:6px 0}
+  .entrytag{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;
+    background:var(--teal);color:#fff;font-weight:800;font-size:14px;margin-right:6px;vertical-align:middle}
+  .entrytag.opt-c{background:var(--gold)}
+  @media print{nav.toc{display:none}.reveal-btn,.btn,.toolbar{display:none}.reveal-body{display:block!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Advanced Accounting · Chapter 4 · Consolidated Financial Statements and Outside Ownership</div>
+    <h1>A Reliable Workflow for Consolidating with a Noncontrolling Interest</h1>
+    <p class="sub">A step-by-step routine built <strong>directly from the textbook method</strong> (LO 4-1 → 4-7), applied to the Father / Sun comprehensive illustration. The new wrinkle: the parent owns <em>less than 100%</em>, so outside owners share the subsidiary. Fill in your own figures — the reveal panels explain the <em>method</em>, never the answer.</p>
+    <div class="legend">
+      <span class="chip"><span class="badge tb">TEXTBOOK</span> Procedure from your Chapter 4 reading</span>
+      <span class="chip"><span class="badge nci">NCI</span> A spot where the noncontrolling interest changes the routine</span>
+      <span class="chip"><span class="badge ex">STUDY AID</span> General good-practice idea</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#use">How to use</a>
+  <a href="#s0">0 · Method</a>
+  <a href="#s1">1 · Total FV</a>
+  <a href="#s2">2 · Allocation</a>
+  <a href="#s3">3 · Split goodwill</a>
+  <a href="#s4">4 · Amortize</a>
+  <a href="#s5">5 · Unamortized</a>
+  <a href="#cstar">*C · Convert</a>
+  <a href="#saide">S·A·I·D·E·P</a>
+  <a href="#ncibox">NCI figures</a>
+  <a href="#check">Checklist</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+
+<main class="wrap">
+
+  <!-- HOW TO USE -->
+  <section class="step" id="use">
+    <div class="step-head"><div class="num">&#9733;</div><div>
+      <h2>How to use this workflow</h2>
+      <div class="src">Designed for both class demonstration and solo practice.</div>
+    </div></div>
+    <p class="lead">Chapter 3 consolidated a wholly owned subsidiary. Chapter 4 changes one thing with big consequences: the parent owns <strong>less than 100%</strong>. The slice it does not own is the <strong>noncontrolling interest (NCI)</strong> — real outside owners who get their share of the subsidiary's equity, income, and dividends. Almost everything from Chapter 3 still applies; you simply <em>split</em> the subsidiary between the controlling and noncontrolling interests at the right moments. Boxes tagged <span class="badge nci">NCI</span> are exactly those moments.</p>
+    <div class="callout gold">
+      <strong>The big idea (textbook).</strong> Under the <em>acquisition (economic-unit) method</em>, you value and report <strong>100% of the subsidiary</strong> at acquisition-date fair value — even the part you didn't buy. The subsidiary's total fair value = <strong>the parent's consideration + the acquisition-date fair value of the NCI</strong>. Goodwill, asset write-ups, and amortization are all recorded in full, then the NCI is assigned its ownership-percentage share.
+    </div>
+    <div class="callout nci">
+      <strong>Four NCI figures to keep straight (LO 4-5).</strong> (1) NCI at the <em>beginning</em> of the year; (2) NCI's <em>share of net income</em> (after excess amortization); (3) NCI's <em>share of dividends</em>; (4) NCI at the <em>end</em> of the year. Get these four right and the worksheet's NCI column takes care of itself.
+    </div>
+
+    <details class="data">
+      <summary>&#9658; Show the given problem data (Father / Sun)</summary>
+      <p class="hint">Reproduced from the problem statement (not the solution). Parentheses = credit balance.</p>
+      <div class="callout tb" style="margin-top:4px">
+        <strong>Acquisition facts.</strong> On <strong>January 1, 2020</strong>, Father acquired an <strong>80% interest</strong> in Sun Company for <strong>$425,000</strong>. The acquisition-date fair value of the <strong>20% noncontrolling interest</strong> was <strong>$102,500</strong>. Sun's total stockholders' equity that day was <strong>$400,000</strong> (common stock $100,000 + retained earnings $300,000). Four accounts were appraised above their recorded balances: <strong>Buildings</strong> undervalued $20,000 (8-yr life); <strong>Land</strong> undervalued $50,000; <strong>Equipment</strong> undervalued $12,500 (5-yr life); and an unrecorded <strong>Royalty agreement</strong> worth $30,000 (20-yr life).
+      </div>
+      <div class="callout tb">
+        <strong>Other facts.</strong> Sun owes Father a <strong>$20,000 intra-entity payable</strong> (included in the balances). <strong>No goodwill impairment</strong> has occurred. The consolidation is prepared as of <strong>December 31, 2024</strong> (the fifth year). Father's books show <em>Investment in Sun $425,000</em> and <em>Dividend income $16,000</em> — a clue about the internal method (see Step 0).
+      </div>
+      <p class="hint" style="margin-top:12px">Trial balances at 12/31/2024:</p>
+      <table class="data-table">
+        <thead><tr>
+          <th>Account</th>
+          <th class="num-cell">Father — Dr (Cr)</th>
+          <th class="num-cell">Sun — Dr (Cr)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Current assets</td><td class="num-cell">605,000</td><td class="num-cell">280,000</td></tr>
+          <tr><td>Investment in Sun Company</td><td class="num-cell">425,000</td><td class="num-cell">&ndash;0&ndash;</td></tr>
+          <tr><td>Land</td><td class="num-cell">200,000</td><td class="num-cell">300,000</td></tr>
+          <tr><td>Buildings (net)</td><td class="num-cell">640,000</td><td class="num-cell">290,000</td></tr>
+          <tr><td>Equipment (net)</td><td class="num-cell">380,000</td><td class="num-cell">160,000</td></tr>
+          <tr><td>Expenses</td><td class="num-cell">550,000</td><td class="num-cell">190,000</td></tr>
+          <tr><td>Dividends declared</td><td class="num-cell">90,000</td><td class="num-cell">20,000</td></tr>
+          <tr class="subtot"><td>Total debits</td><td class="num-cell">2,890,000</td><td class="num-cell">1,240,000</td></tr>
+          <tr><td>Liabilities</td><td class="num-cell cr">(910,000)</td><td class="num-cell cr">(300,000)</td></tr>
+          <tr><td>Common stock</td><td class="num-cell cr">(480,000)</td><td class="num-cell cr">(100,000)</td></tr>
+          <tr><td>Retained earnings, 1/1/24</td><td class="num-cell cr">(704,000)</td><td class="num-cell cr">(480,000)</td></tr>
+          <tr><td>Revenues</td><td class="num-cell cr">(780,000)</td><td class="num-cell cr">(360,000)</td></tr>
+          <tr><td>Dividend income</td><td class="num-cell cr">(16,000)</td><td class="num-cell cr">&ndash;0&ndash;</td></tr>
+          <tr class="subtot"><td>Total credits</td><td class="num-cell">(2,890,000)</td><td class="num-cell">(1,240,000)</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">Part (c) of the problem asks you to redo the analysis assuming the acquisition-date NCI fair value was <strong>$104,500</strong> instead — a built-in sensitivity test for the goodwill split and the NCI balances.</p>
+    </details>
+  </section>
+
+  <!-- STEP 0 METHOD -->
+  <section class="step" id="s0">
+    <div class="step-head"><div class="num">0</div><div>
+      <h2>Note the ownership split and the parent's internal method <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">Carried forward from Ch.3 (LO 3-2) — equity vs. initial value vs. partial equity</div>
+    </div></div>
+    <p class="lead">Two facts set up everything: the <strong>ownership percentages</strong> (here 80% controlling / 20% NCI) and the parent's <strong>internal method</strong>, which decides whether you need an <strong>Entry *C</strong>. The tell-tale: a frozen Investment balance plus a "Dividend income" account means the <em>initial value</em> method. Click the method the problem indicates.</p>
+    <div class="tree">
+      <div class="opt" data-out="o-eq"><b>Equity method.</b> Investment moves each year (income up, dividends and amortization down). No separate "Dividend income" account. <span class="hint">No *C needed.</span></div>
+      <div class="opt" data-out="o-iv"><b>Initial value (cost) method.</b> Investment frozen at acquisition cost; only "Dividend income" is recorded. <span class="hint">*C needed; Entry I removes Dividend income.</span></div>
+      <div class="opt" data-out="o-pe"><b>Partial equity method.</b> Investment moves for income and dividends, but amortization is never booked. <span class="hint">*C needed (amortization only).</span></div>
+    </div>
+    <div class="tree-out" id="o-eq"><div class="callout tb"><strong>No conversion.</strong> Skip Entry *C. Entry I removes "Equity in subsidiary earnings."</div></div>
+    <div class="tree-out" id="o-iv"><div class="callout tb"><strong>Conversion needed.</strong> Add <strong>Entry *C</strong> to rebuild the parent's beginning Retained Earnings to an equity basis for <em>all prior years</em>. Because the parent booked Dividend income, <strong>Entry I eliminates Dividend income</strong> and no separate Entry D is needed for the parent's share.</div></div>
+    <div class="tree-out" id="o-pe"><div class="callout tb"><strong>Partial conversion.</strong> Add an <strong>Entry *C</strong> covering only the prior-year amortizations the parent skipped.</div></div>
+    <div class="callout gold"><strong>Same consolidated totals either way (LO 3-4 / 4-?).</strong> The internal method changes only *C, I, and D. The NCI figures and every consolidated total are identical across methods. The Father/Sun data above points to the <em>initial value</em> method.</div>
+  </section>
+
+  <!-- STEP 1 TOTAL FV -->
+  <section class="step" id="s1">
+    <div class="step-head"><div class="num ncin">1</div><div>
+      <h2>Value the whole subsidiary: total acquisition-date fair value <span class="badge nci">NCI</span></h2>
+      <div class="src">LO 4-2 — the economic-unit starting point</div>
+    </div></div>
+    <p class="lead">When ownership is below 100%, you still value <strong>all</strong> of the subsidiary. Add the parent's consideration to the acquisition-date fair value of the NCI. This combined figure — not just the price the parent paid — drives the excess and goodwill in Step 2.</p>
+    <table>
+      <tr><td>Consideration transferred by parent (controlling interest)</td><td class="num-cell"><input class="fill" id="t_consid" placeholder="$"></td></tr>
+      <tr><td>+ Acquisition-date fair value of the noncontrolling interest</td><td class="num-cell"><input class="fill" id="t_nci" placeholder="$"></td></tr>
+      <tr class="total"><td>= Total acquisition-date fair value of the subsidiary</td><td class="num-cell"><span class="live" id="t_total">&mdash;</span></td></tr>
+    </table>
+    <button class="reveal-btn" data-target="r1">Show the method &#9656;</button>
+    <div class="reveal-body" id="r1">
+      <h4>How the textbook builds this figure</h4>
+      <p><code>Total fair value = Consideration transferred + Fair value of NCI</code>. The controlling piece is easy — the consideration the parent paid is the best evidence of its fair value. The NCI piece has no purchase to point to, so the chapter measures it at fair value using market evidence (e.g., the trading price of the shares the parent did <em>not</em> buy).</p>
+      <ul>
+        <li>If the NCI's per-share value equals the parent's per-share price, there is <strong>no control premium</strong> and goodwill later splits proportionately.</li>
+        <li>If the parent paid a <strong>control premium</strong>, the NCI per-share value is lower, and goodwill will <em>not</em> split by ownership percentage (Step 3 handles this).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 2 ALLOCATION -->
+  <section class="step" id="s2">
+    <div class="step-head"><div class="num ncin">2</div><div>
+      <h2>Excess fair value over book value &rarr; identifiable allocations &rarr; goodwill <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 4-3 — full (100%) fair-value allocation</div>
+    </div></div>
+    <p class="lead">Subtract the subsidiary's book value from the <em>total</em> fair value (Step 1). Allocate the excess to identifiable assets and liabilities at their full fair-value differences; the residual is <strong>goodwill</strong>. Everything here is at 100% — you split it later, not now.</p>
+    <table>
+      <tr><td>Total acquisition-date fair value (from Step 1)</td><td class="num-cell"><input class="fill" id="x_total" placeholder="$"></td></tr>
+      <tr><td>&minus; Subsidiary book value of net assets (at acquisition)</td><td class="num-cell"><input class="fill" id="x_book" placeholder="$"></td></tr>
+      <tr class="total"><td>= Excess of fair value over book value</td><td class="num-cell"><span class="live" id="x_excess">&mdash;</span></td></tr>
+      <tr><td colspan="2" class="hint" style="padding-top:12px"><strong>Allocate the excess</strong> to identifiable accounts at full FV &minus; BV (negative if FV is below book):</td></tr>
+      <tr><td>Buildings adjustment</td><td class="num-cell"><input class="fill xalloc" placeholder="$"></td></tr>
+      <tr><td>Land adjustment</td><td class="num-cell"><input class="fill xalloc" placeholder="$"></td></tr>
+      <tr><td>Equipment adjustment</td><td class="num-cell"><input class="fill xalloc" placeholder="$"></td></tr>
+      <tr><td>Royalty agreement (previously unrecorded)</td><td class="num-cell"><input class="fill xalloc" placeholder="$"></td></tr>
+      <tr class="total"><td>= Goodwill (total, residual)</td><td class="num-cell"><span class="live" id="x_goodwill">&mdash;</span></td></tr>
+    </table>
+    <div class="verdict n" id="x_verdict">Enter the total fair value, book value, and allocations to see the residual.</div>
+    <button class="reveal-btn" data-target="r2">Show the method &#9656;</button>
+    <div class="reveal-body" id="r2">
+      <h4>How the textbook builds this schedule</h4>
+      <p><code>Excess = Total fair value &minus; Book value of net assets</code>, then assign account by account at <strong>full fair-value differences</strong>, residual to goodwill. Because you started from the <em>total</em> (controlling + NCI) fair value, the write-ups and goodwill are automatically at 100% — the economic-unit view.</p>
+      <ul>
+        <li>Land and goodwill are <strong>not amortized</strong>; finite-lived items are (Step 4).</li>
+        <li>A zero or negative residual can signal a bargain purchase on the parent's portion — re-check the fair values first.</li>
+        <li>This is the same allocation logic as Chapters 2&ndash;3; only the starting total changed.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 3 GOODWILL SPLIT -->
+  <section class="step" id="s3">
+    <div class="step-head"><div class="num ncin">3</div><div>
+      <h2>Split goodwill between controlling and noncontrolling interests <span class="badge nci">NCI</span></h2>
+      <div class="src">LO 4-3 &amp; LO 4-7 — each interest's goodwill is computed on its own</div>
+    </div></div>
+    <p class="lead">Goodwill is <em>not</em> simply pro-rated by ownership when a control premium exists, so the textbook computes each interest's goodwill separately. Enter the consideration, the NCI fair value, the controlling ownership %, and the subsidiary's total identifiable net-asset fair value (book value + all identifiable adjustments).</p>
+    <table>
+      <tr><td>Controlling ownership %</td><td class="num-cell"><input class="fill pct" id="g_pct" placeholder="80"> %</td></tr>
+      <tr><td>Subsidiary identifiable net-asset fair value <span class="hint">(book + identifiable adjustments)</span></td><td class="num-cell"><input class="fill" id="g_idfv" placeholder="$"></td></tr>
+      <tr class="subtot"><td>Consideration transferred (controlling)</td><td class="num-cell"><input class="fill" id="g_consid" placeholder="$"></td></tr>
+      <tr><td>&minus; Controlling % &times; identifiable FV</td><td class="num-cell"><span class="live" id="g_ctrlbase">&mdash;</span></td></tr>
+      <tr class="total"><td>= Controlling-interest goodwill</td><td class="num-cell"><span class="live" id="g_ctrlgw">&mdash;</span></td></tr>
+      <tr class="subtot"><td>NCI acquisition-date fair value</td><td class="num-cell"><input class="fill" id="g_ncifv" placeholder="$"></td></tr>
+      <tr><td>&minus; NCI % &times; identifiable FV</td><td class="num-cell"><span class="live" id="g_ncibase">&mdash;</span></td></tr>
+      <tr class="total"><td>= Noncontrolling-interest goodwill</td><td class="num-cell"><span class="live nci" id="g_ncigw">&mdash;</span></td></tr>
+      <tr class="total"><td>= Total goodwill (should match Step 2)</td><td class="num-cell"><span class="live" id="g_totgw">&mdash;</span></td></tr>
+    </table>
+    <div class="verdict n" id="g_verdict">Enter the figures to compute each interest's goodwill.</div>
+    <button class="reveal-btn" data-target="r3">Show the method &#9656;</button>
+    <div class="reveal-body" id="r3">
+      <h4>How each goodwill figure is built (textbook)</h4>
+      <p><code>Controlling goodwill = Consideration &minus; (Controlling % &times; identifiable net-asset FV)</code><br>
+      <code>NCI goodwill = NCI fair value &minus; (NCI % &times; identifiable net-asset FV)</code></p>
+      <ul>
+        <li><strong>No control premium:</strong> NCI per-share value matches the parent's, and the two goodwill figures end up proportional to ownership.</li>
+        <li><strong>Control premium:</strong> the premium accrues only to the controlling interest, so its goodwill is <em>disproportionately</em> large and the NCI's is smaller. This is exactly why you don't just multiply total goodwill by 20%.</li>
+        <li>It is perfectly possible for <strong>NCI goodwill to be zero</strong> (when NCI fair value equals its share of identifiable net assets) while controlling goodwill is positive.</li>
+        <li>The two pieces should sum to the Step 2 total — a built-in cross-check.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 4 AMORTIZE -->
+  <section class="step" id="s4">
+    <div class="step-head"><div class="num">4</div><div>
+      <h2>Annual excess-amortization schedule <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 4-4 — the expense that also lowers the NCI's income share</div>
+    </div></div>
+    <p class="lead">Same as Chapter 3: each finite-lived allocation is amortized straight-line; land and goodwill are not. Enter each allocation and its life. This total feeds Entry E <em>and</em> reduces the subsidiary's adjusted income that both interests share.</p>
+    <table>
+      <thead><tr><th>Allocation</th><th class="num-cell">Amount</th><th class="num-cell">Life (yrs)</th><th class="num-cell">Annual amortization</th></tr></thead>
+      <tbody>
+        <tr><td>Buildings</td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="yrs"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Land <span class="hint">(indefinite &rarr; leave life blank)</span></td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="&mdash;"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Equipment</td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="yrs"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Royalty agreement</td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="yrs"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Goodwill <span class="hint">(indefinite &rarr; leave life blank)</span></td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="&mdash;"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr class="total"><td colspan="3">Total annual excess amortization</td><td class="num-cell"><span class="live" id="am_total">&mdash;</span></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="r4">Show the method &#9656;</button>
+    <div class="reveal-body" id="r4">
+      <h4>How the textbook builds this figure</h4>
+      <p><code>Annual amortization = Allocation &divide; Remaining life</code> for each finite-lived item; leave indefinite items (land, goodwill) blank. This single total is what makes consolidated income differ from the simple sum of the two companies — and, crucially in Chapter 4, it reduces the subsidiary's adjusted income <em>before</em> you carve off the NCI's share.</p>
+      <ul>
+        <li>Watch the lives: an item with a 5-year life acquired five years ago is <strong>fully amortized</strong> by now — its current-year expense may be its last.</li>
+        <li>Keep signs: a negative allocation reduces expense.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 5 UNAMORTIZED -->
+  <section class="step" id="s5">
+    <div class="step-head"><div class="num">5</div><div>
+      <h2>Beginning-of-year unamortized balances <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 4-5 — the amounts Entry A (and the NCI's share of it) uses</div>
+    </div></div>
+    <p class="lead">Entry A brings in the excess that is <em>still unamortized at the start of the current year</em>, and the NCI gets its percentage of that balance in its beginning figure. For each finite-lived allocation, subtract the amortization taken in the years before the current one. Land and goodwill carry unchanged.</p>
+    <table>
+      <thead><tr><th>Allocation</th><th class="num-cell">Original</th><th class="num-cell">Annual &times; prior yrs</th><th class="num-cell">Unamortized at 1/1 (current yr)</th></tr></thead>
+      <tbody>
+        <tr><td>Buildings</td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><input class="fill un-amt" style="width:80px" placeholder="$/yr"> &times; <input class="fill un-yrs" style="width:55px" placeholder="yrs"></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Land <span class="hint">(unchanged)</span></td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><span class="hint">no amortization</span></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Equipment</td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><input class="fill un-amt" style="width:80px" placeholder="$/yr"> &times; <input class="fill un-yrs" style="width:55px" placeholder="yrs"></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Royalty agreement</td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><input class="fill un-amt" style="width:80px" placeholder="$/yr"> &times; <input class="fill un-yrs" style="width:55px" placeholder="yrs"></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Goodwill <span class="hint">(unchanged)</span></td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><span class="hint">no amortization</span></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="r5">Show the method &#9656;</button>
+    <div class="reveal-body" id="r5">
+      <h4>How the textbook builds these balances</h4>
+      <p><code>Unamortized at start of current year = Original &minus; (Annual &times; full prior years)</code>. For a 1/1/2020 acquisition consolidated at 12/31/2024, the current year is the fifth, so <strong>four</strong> prior years have already amortized.</p>
+      <ul>
+        <li>Land and goodwill have no amortization, so their unamortized balance equals the original every year.</li>
+        <li>These beginning balances feed <strong>Entry A</strong>, and the NCI's <em>share</em> of their total is part of beginning NCI (NCI box below).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ENTRY *C -->
+  <section class="step" id="cstar">
+    <div class="step-head"><div class="num path">*C</div><div>
+      <h2>Entry *C — convert the parent's books to equity basis <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">Carried from Ch.3 — only for initial value or partial equity</div>
+    </div></div>
+    <p class="lead">If Step 0 identified the <strong>initial value</strong> or <strong>partial equity</strong> method, the parent's beginning Retained Earnings is missing prior-year effects. Entry *C restores them <em>before</em> the normal sequence. Skip this box entirely under the full equity method. Note: *C deals only with the <strong>parent's</strong> share — the NCI is never affected by *C.</p>
+    <table class="je">
+      <thead><tr><th class="acct">Account (initial value example)</th><th class="dr num-cell">Debit</th><th class="crc num-cell">Credit</th></tr></thead>
+      <tbody>
+        <tr><td>Investment in Subsidiary</td><td class="num-cell"><input class="fill" placeholder="$"></td><td></td></tr>
+        <tr><td class="indent">Retained Earnings, beginning (parent)</td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="rC">Show the method &#9656;</button>
+    <div class="reveal-body" id="rC">
+      <h4>What *C corrects, by method</h4>
+      <ul>
+        <li><strong>Initial value.</strong> Add the parent's share of the prior-years' net effect: <code>controlling % &times; (subsidiary income &minus; dividends, prior years) &minus; controlling % &times; prior-years' excess amortization</code>. Debit Investment, credit beginning Retained Earnings.</li>
+        <li><strong>Partial equity.</strong> Remove only the prior-years' amortization (parent's share): debit beginning Retained Earnings, credit Investment.</li>
+        <li><strong>Equity.</strong> No *C.</li>
+      </ul>
+      <p class="hint">Self-check: *C uses the parent's ownership % only, and touches only prior periods. The current year flows through Entries I, D, and E.</p>
+    </div>
+  </section>
+
+  <!-- SAIDE SEQUENCE -->
+  <section class="step" id="saide">
+    <div class="step-head"><div class="num path">S&hellip;</div><div>
+      <h2>The worksheet sequence with an NCI: S &middot; A &middot; I &middot; D &middot; E &middot; P <span class="badge nci">NCI</span></h2>
+      <div class="src">LO 4-5 — same letters as Ch.3, now routing a share to the NCI column</div>
+    </div></div>
+    <p class="lead">The entries are the Chapter 3 entries; two of them (<strong>S</strong> and <strong>A</strong>) now credit a slice to a new <strong>Noncontrolling Interest</strong> column, and <strong>D</strong> only removes the parent's share of dividends. Fill your own amounts; debits and credits balance within each entry.</p>
+
+    <div class="callout"><strong>Memory hook.</strong> <strong>S</strong>tock equity out (split to NCI) &middot; <strong>A</strong>llocations in (split to NCI) &middot; <strong>I</strong>ncome accrual out (parent only) &middot; <strong>D</strong>ividends out (parent's share only) &middot; <strong>E</strong>xpense amortization in &middot; <strong>P</strong>ayables/receivables out.</p></div>
+
+    <h4 style="margin:16px 0 2px;color:var(--navy)"><span class="entrytag">S</span>Eliminate beginning subsidiary equity &mdash; split to NCI <span class="badge nci">NCI</span></h4>
+    <p class="hint" style="margin:0 0 6px">Debit the subsidiary's <em>full</em> beginning Common Stock and Retained Earnings; credit the parent's % to Investment and the NCI's % to the Noncontrolling Interest column.</p>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Common Stock (sub, beginning)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td>Retained Earnings (sub, beginning)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Investment in Subsidiary <span class="hint">(controlling %)</span></td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+        <tr><td class="indent">Noncontrolling Interest <span class="hint">(NCI %)</span></td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">A</span>Bring in unamortized excess (Step 5) &mdash; split to NCI <span class="badge nci">NCI</span></h4>
+    <p class="hint" style="margin:0 0 6px">Debit the assets/goodwill at their full beginning-unamortized amounts; credit the parent's % to Investment and the NCI's % to the Noncontrolling Interest column.</p>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Buildings / Land / Equipment / Royalty / Goodwill (unamortized)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Investment in Subsidiary <span class="hint">(controlling %)</span></td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+        <tr><td class="indent">Noncontrolling Interest <span class="hint">(NCI %)</span></td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid2">
+      <div>
+        <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">I</span>Eliminate the parent's income accrual</h4>
+        <p class="hint" style="margin:0 0 6px">Equity / partial: remove "Equity in subsidiary earnings." Initial value: remove "Dividend income."</p>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Equity in Sub. Earnings <span class="hint">(or Dividend Income)</span></td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Investment in Subsidiary</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">D</span>Eliminate the parent's share of dividends <span class="badge nci">NCI</span></h4>
+        <p class="hint" style="margin:0 0 6px">Only the controlling % is eliminated; the NCI's share of dividends stays and reduces ending NCI.</p>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Investment in Subsidiary</td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Dividends Declared (sub, parent's %)</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">E</span>Record this year's excess amortization (Step 4)</h4>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Depreciation / Amortization Expense</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Buildings / Equipment / Royalty agreement</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">P</span>Eliminate intra-entity receivable / payable <span class="badge tb" style="margin-left:6px">REQUIRED HERE</span></h4>
+    <p class="hint" style="margin:0 0 6px">This problem has a $20,000 amount the subsidiary owes the parent — eliminate it so the combined entity doesn't owe itself.</p>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Liabilities / Payable (intra-entity)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Current assets / Receivable (intra-entity)</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <button class="reveal-btn" data-target="rSAIDE">Show how NCI changes each entry &#9656;</button>
+    <div class="reveal-body" id="rSAIDE">
+      <h4>What's different from the 100% case (textbook)</h4>
+      <ul>
+        <li><strong>S</strong> — the subsidiary's full beginning equity comes out, but only the parent's % offsets the Investment; the rest is credited to the <strong>Noncontrolling Interest</strong> column (the NCI's share of book value).</li>
+        <li><strong>A</strong> — the full unamortized excess and goodwill go onto the books, offset to Investment for the parent's % and to <strong>Noncontrolling Interest</strong> for the NCI's % (the NCI's share of the fair-value step-up).</li>
+        <li><strong>I</strong> — unchanged in spirit: it removes only the <em>parent's</em> recorded income from the subsidiary.</li>
+        <li><strong>D</strong> — only the <em>parent's</em> share of dividends is eliminated; the NCI's share is a real distribution to outside owners and reduces ending NCI.</li>
+        <li><strong>E</strong> — full amortization is recorded; the NCI automatically bears its share because amortization lowers the subsidiary's adjusted income that feeds the NCI line.</li>
+        <li><strong>P</strong> — unaffected by ownership %; intra-entity balances net to zero regardless of who owns what.</li>
+      </ul>
+      <p class="hint">Self-check: after *C, S, A, I, D the <strong>Investment account nets to zero</strong>; the new <strong>Noncontrolling Interest column</strong> accumulates beginning NCI + income share &minus; dividend share = ending NCI (next box).</p>
+    </div>
+  </section>
+
+  <!-- NCI FIGURES -->
+  <section class="step" id="ncibox">
+    <div class="step-head"><div class="num ncin">N</div><div>
+      <h2>The four NCI figures &amp; the income split <span class="badge nci">NCI</span></h2>
+      <div class="src">LO 4-4 &amp; LO 4-5 — the heart of Chapter 4</div>
+    </div></div>
+    <p class="lead">Two small calculators close the loop: roll the NCI balance forward, and split consolidated net income between the controlling and noncontrolling interests.</p>
+
+    <h4 style="margin:6px 0 2px;color:var(--navy)">A. Noncontrolling interest roll-forward</h4>
+    <table>
+      <tr><td>NCI percentage</td><td class="num-cell"><input class="fill pct" id="n_pct" placeholder="20"> %</td></tr>
+      <tr><td>Noncontrolling interest, beginning of year</td><td class="num-cell"><input class="fill" id="n_begin" placeholder="$"></td></tr>
+      <tr><td>Subsidiary net income, adjusted for excess amortization</td><td class="num-cell"><input class="fill" id="n_subinc" placeholder="$"></td></tr>
+      <tr><td>+ NCI share of adjusted net income <span class="hint">(NCI % &times; above)</span></td><td class="num-cell"><span class="live nci" id="n_incshare">&mdash;</span></td></tr>
+      <tr><td>Subsidiary dividends declared</td><td class="num-cell"><input class="fill" id="n_div" placeholder="$"></td></tr>
+      <tr><td>&minus; NCI share of dividends <span class="hint">(NCI % &times; above)</span></td><td class="num-cell"><span class="live nci" id="n_divshare">&mdash;</span></td></tr>
+      <tr class="total"><td>= Noncontrolling interest, end of year</td><td class="num-cell"><span class="live nci" id="n_end">&mdash;</span></td></tr>
+    </table>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)">B. Allocate consolidated net income</h4>
+    <table>
+      <tr><td>Consolidated net income <span class="hint">(parent's own income + sub income &minus; excess amortization)</span></td><td class="num-cell"><input class="fill" id="i_consol" placeholder="$"></td></tr>
+      <tr><td>&minus; Net income attributable to NCI <span class="hint">(NCI % &times; adjusted sub income)</span></td><td class="num-cell"><span class="live nci" id="i_ncishare">&mdash;</span></td></tr>
+      <tr class="total"><td>= Net income attributable to parent (controlling)</td><td class="num-cell"><span class="live" id="i_ctrl">&mdash;</span></td></tr>
+    </table>
+    <button class="reveal-btn" data-target="rN">Show the method &#9656;</button>
+    <div class="reveal-body" id="rN">
+      <h4>How the textbook builds these (LO 4-4 / 4-5)</h4>
+      <ul>
+        <li><strong>NCI share of income</strong> = NCI % &times; (subsidiary net income &minus; excess amortization). Use the <em>adjusted</em> subsidiary income, not its raw income, because the fair-value amortization belongs to the consolidated entity.</li>
+        <li><strong>NCI roll-forward:</strong> <code>Ending NCI = Beginning NCI + NCI income share &minus; NCI dividend share</code>. The beginning NCI itself = NCI % of the subsidiary's beginning book value + NCI % of the beginning unamortized excess (Steps 5 + 3).</li>
+        <li><strong>Income split:</strong> consolidated net income &minus; NCI's share = the controlling (parent) share. Both appear on the consolidated income statement; the NCI line is a deduction, not an expense.</li>
+        <li><strong>Cross-check:</strong> rolling forward from the beginning balance should match 20% of the subsidiary's <em>ending</em> book value plus 20% of the <em>ending</em> unamortized excess — two routes, one answer.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="step" id="check">
+    <div class="step-head"><div class="num">&#10003;</div><div>
+      <h2>Reliability checklist <span class="badge ex">STUDY AID</span></h2>
+      <div class="src">A self-verification routine — habits that catch the common NCI errors</div>
+    </div></div>
+    <p class="lead">The textbook gives the method; this checklist makes it <em>reliable</em>. Tick each before calling the problem done.</p>
+    <div class="progress"><span id="cl_bar"></span></div>
+    <div class="hint" id="cl_count">0 of 8 complete</div>
+    <ul class="checklist" id="cl">
+      <li><input type="checkbox"> I started from the <em>total</em> fair value (consideration + NCI fair value), not just the parent's price.</li>
+      <li><input type="checkbox"> I recorded asset write-ups and goodwill at full (100%) fair value, then split shares to the NCI.</li>
+      <li><input type="checkbox"> I computed controlling and NCI goodwill <em>separately</em>, and they sum to total goodwill (watch for a control premium).</li>
+      <li><input type="checkbox"> Entry A uses beginning-of-year <em>unamortized</em> balances, and the NCI got its % in beginning NCI.</li>
+      <li><input type="checkbox"> Entry D removed only the parent's share of dividends; the NCI's share reduced ending NCI.</li>
+      <li><input type="checkbox"> NCI income share used the subsidiary income <em>after</em> excess amortization.</li>
+      <li><input type="checkbox"> I eliminated the intra-entity receivable/payable (Entry P).</li>
+      <li><input type="checkbox"> Investment nets to zero; my NCI roll-forward matches the "20% of ending equity + 20% of ending unamortized excess" cross-check.</li>
+    </ul>
+    <div class="toolbar">
+      <button class="btn ghost" id="resetBtn">Reset all inputs</button>
+      <button class="btn" id="printBtn">Print / Save as PDF</button>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="step" id="sources">
+    <div class="step-head"><div class="num">i</div><div>
+      <h2>Where each idea comes from</h2>
+      <div class="src">Textbook-first, with clearly separated outside ideas</div>
+    </div></div>
+    <div class="callout tb">
+      <strong><span class="badge tb">TEXTBOOK</span> Straight from your Chapter 4 reading.</strong> The spine of this workflow — the economic-unit valuation (total fair value = consideration + NCI fair value, LO 4-2), the full fair-value allocation and the separate goodwill computations for each interest (LO 4-3, LO 4-7, Exhibit 4.3), the allocation of consolidated net income to the NCI after excess amortization (LO 4-4), the four NCI figures and the worksheet with a Noncontrolling Interest column (LO 4-5, Exhibit 4.7), and the placement of the NCI on the statements (LO 4-6) — is taken directly from the chapter. The S&middot;A&middot;I&middot;D&middot;E&middot;P entries and Entry *C carry over from Chapter 3. Use this as your primary method.
+    </div>
+    <div class="callout ex">
+      <strong><span class="badge ex">STUDY AID</span> Helpful ideas from general practice (not the textbook).</strong> These are common study/teaching techniques layered on top — they don't change the accounting, just make it more reliable:
+      <ul>
+        <li><strong>"Identify the method first" framing</strong> as an explicit Step 0 decision tree — a study-skills habit, not a textbook step.</li>
+        <li><strong>The S&middot;A&middot;I&middot;D&middot;E&middot;P memory hook and the reliability checklist</strong> — standard error-catching practice.</li>
+        <li><strong>The two-route NCI cross-check</strong> (roll-forward vs. "% of ending equity + % of ending unamortized excess") and the Investment-nets-to-zero check — quick self-verifications.</li>
+        <li><strong>Building the allocation, goodwill-split, and amortization schedules in a spreadsheet with cross-foot checks</strong> — an easy way to catch arithmetic slips.</li>
+      </ul>
+      <span class="hint">This workflow teaches the method only — it contains no solution figures, so you can practice every step without spoiling the answer. The Father / Sun amounts shown are from the problem statement, not its solution.</span>
+    </div>
+  </section>
+
+  <footer>
+    Built for in-class demonstration and self-study &middot; Method sourced from Chapter 4 (Hoyle-style Advanced Accounting), LO 4-1 &rarr; 4-7, Exhibits 4.1&ndash;4.7 &middot; No solution figures are included.
+  </footer>
+</main>
+
+<script>
+(function(){
+  function num(v){ if(v==null) return NaN; var s=(""+v).replace(/[^0-9.\-]/g,""); return s===""?NaN:parseFloat(s); }
+  function fmt(n){ if(isNaN(n)) return "&mdash;"; return (n<0?"-$":"$")+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0}); }
+  function setLive(el,n){ if(el) el.innerHTML = isNaN(n) ? "&mdash;" : fmt(n); }
+
+  // reveal toggles
+  document.querySelectorAll(".reveal-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var t=document.getElementById(b.dataset.target);
+      var open=t.classList.toggle("open");
+      b.textContent=b.textContent.replace(/▸|▾/,open?"▾":"▸");
+    });
+  });
+
+  // method decision tree
+  document.querySelectorAll(".opt").forEach(function(o){
+    o.addEventListener("click",function(){
+      o.classList.toggle("sel");
+      var out=document.getElementById(o.dataset.out);
+      out.classList.toggle("open", o.classList.contains("sel"));
+    });
+  });
+
+  // STEP 1 total fair value
+  var tConsid=document.getElementById("t_consid"), tNci=document.getElementById("t_nci");
+  function calcTotal(){
+    var c=num(tConsid.value), n=num(tNci.value);
+    var any=!isNaN(c)||!isNaN(n);
+    setLive(document.getElementById("t_total"), any?((c||0)+(n||0)):NaN);
+  }
+  [tConsid,tNci].forEach(function(e){e.addEventListener("input",calcTotal);});
+
+  // STEP 2 allocation -> goodwill
+  var xTotal=document.getElementById("x_total"), xBook=document.getElementById("x_book");
+  function calcAlloc(){
+    var t=num(xTotal.value), b=num(xBook.value);
+    var excess=(!isNaN(t)||!isNaN(b))?((t||0)-(b||0)):NaN;
+    if(isNaN(t)&&isNaN(b)) excess=NaN;
+    setLive(document.getElementById("x_excess"), excess);
+    var sum=0, any=false;
+    document.querySelectorAll(".xalloc").forEach(function(e){var v=num(e.value); if(!isNaN(v)){sum+=v;any=true;}});
+    var gEl=document.getElementById("x_goodwill"), vEl=document.getElementById("x_verdict");
+    if(isNaN(excess)){ gEl.innerHTML="&mdash;"; vEl.className="verdict n"; vEl.textContent="Enter the total fair value, book value, and allocations to see the residual."; return; }
+    var gw=excess-sum; setLive(gEl,gw);
+    if(!any){ vEl.className="verdict n"; vEl.textContent="Now allocate the excess to identifiable accounts; the residual is goodwill."; }
+    else if(Math.abs(gw)<0.5){ vEl.className="verdict g"; vEl.textContent="The identifiable allocations use up the entire excess → total goodwill is zero (valid)."; }
+    else if(gw>0){ vEl.className="verdict g"; vEl.textContent="Excess remains after identifiable items → the residual is total GOODWILL (split it in Step 3)."; }
+    else{ vEl.className="verdict b"; vEl.textContent="You allocated more than the excess → re-check your fair values; a negative residual usually signals a bargain purchase or an error."; }
+  }
+  [xTotal,xBook].forEach(function(e){e.addEventListener("input",calcAlloc);});
+  document.querySelectorAll(".xalloc").forEach(function(e){e.addEventListener("input",calcAlloc);});
+
+  // STEP 3 goodwill split
+  var gPct=document.getElementById("g_pct"), gIdfv=document.getElementById("g_idfv"),
+      gConsid=document.getElementById("g_consid"), gNcifv=document.getElementById("g_ncifv");
+  function calcSplit(){
+    var pct=num(gPct.value), idfv=num(gIdfv.value), consid=num(gConsid.value), ncifv=num(gNcifv.value);
+    var ctrlBase=(!isNaN(pct)&&!isNaN(idfv))?(pct/100*idfv):NaN;
+    var nciBase=(!isNaN(pct)&&!isNaN(idfv))?((100-pct)/100*idfv):NaN;
+    setLive(document.getElementById("g_ctrlbase"), ctrlBase);
+    setLive(document.getElementById("g_ncibase"), nciBase);
+    var ctrlGw=(!isNaN(consid)&&!isNaN(ctrlBase))?(consid-ctrlBase):NaN;
+    var nciGw=(!isNaN(ncifv)&&!isNaN(nciBase))?(ncifv-nciBase):NaN;
+    setLive(document.getElementById("g_ctrlgw"), ctrlGw);
+    setLive(document.getElementById("g_ncigw"), nciGw);
+    var totEl=document.getElementById("g_totgw"), vEl=document.getElementById("g_verdict");
+    if(!isNaN(ctrlGw)&&!isNaN(nciGw)){
+      var tot=ctrlGw+nciGw; setLive(totEl,tot);
+      vEl.className="verdict g";
+      if(Math.abs(nciGw)<0.5) vEl.textContent="NCI fair value equals its share of identifiable net assets → NCI goodwill is zero; all goodwill is controlling.";
+      else vEl.textContent="Each interest's goodwill is computed on its own; their sum should match the Step 2 total goodwill.";
+    } else { totEl.innerHTML="&mdash;"; vEl.className="verdict n"; vEl.textContent="Enter the figures to compute each interest's goodwill."; }
+  }
+  [gPct,gIdfv,gConsid,gNcifv].forEach(function(e){e.addEventListener("input",calcSplit);});
+
+  // STEP 4 amortization
+  function calcAmort(){
+    var rows=document.querySelectorAll("#s4 tbody tr"); var total=0, any=false;
+    rows.forEach(function(r){
+      var amt=r.querySelector(".am-amt"), life=r.querySelector(".am-life"), out=r.querySelector(".am-out");
+      if(!amt||!life||!out) return;
+      var a=num(amt.value), l=num(life.value);
+      if(!isNaN(a)&&!isNaN(l)&&l>0){ var ann=a/l; setLive(out,ann); total+=ann; any=true; }
+      else if(!isNaN(a)){ out.innerHTML="$0"; }
+      else { out.innerHTML="&mdash;"; }
+    });
+    setLive(document.getElementById("am_total"), any?total:NaN);
+  }
+  document.querySelectorAll(".am-amt,.am-life").forEach(function(e){e.addEventListener("input",calcAmort);});
+
+  // STEP 5 unamortized
+  function calcUnam(){
+    document.querySelectorAll("#s5 tbody tr").forEach(function(r){
+      var orig=r.querySelector(".un-orig"), amt=r.querySelector(".un-amt"), yrs=r.querySelector(".un-yrs"), out=r.querySelector(".un-out");
+      if(!orig||!out) return;
+      var o=num(orig.value);
+      if(isNaN(o)){ out.innerHTML="&mdash;"; return; }
+      if(!amt||!yrs){ setLive(out,o); return; } // land / goodwill rows: unchanged
+      var a=num(amt.value), y=num(yrs.value);
+      var taken=(!isNaN(a)&&!isNaN(y))?a*y:0;
+      setLive(out, o-taken);
+    });
+  }
+  document.querySelectorAll(".un-orig,.un-amt,.un-yrs").forEach(function(e){e.addEventListener("input",calcUnam);});
+
+  // NCI roll-forward
+  var nPct=document.getElementById("n_pct"), nBegin=document.getElementById("n_begin"),
+      nSub=document.getElementById("n_subinc"), nDiv=document.getElementById("n_div");
+  function calcNci(){
+    var pct=num(nPct.value)/100;
+    var inc=num(nSub.value), div=num(nDiv.value), beg=num(nBegin.value);
+    var incShare=(!isNaN(pct)&&!isNaN(inc))?pct*inc:NaN;
+    var divShare=(!isNaN(pct)&&!isNaN(div))?pct*div:NaN;
+    setLive(document.getElementById("n_incshare"), incShare);
+    setLive(document.getElementById("n_divshare"), divShare);
+    var end=(!isNaN(beg)||!isNaN(incShare)||!isNaN(divShare))?((beg||0)+(incShare||0)-(divShare||0)):NaN;
+    setLive(document.getElementById("n_end"), end);
+  }
+  [nPct,nBegin,nSub,nDiv].forEach(function(e){e.addEventListener("input",calcNci);});
+
+  // income allocation
+  var iConsol=document.getElementById("i_consol");
+  function calcInc(){
+    var pct=num(nPct.value)/100;
+    var inc=num(nSub.value); // reuse adjusted sub income
+    var consol=num(iConsol.value);
+    var ncishare=(!isNaN(pct)&&!isNaN(inc))?pct*inc:NaN;
+    setLive(document.getElementById("i_ncishare"), ncishare);
+    var ctrl=(!isNaN(consol)&&!isNaN(ncishare))?(consol-ncishare):NaN;
+    setLive(document.getElementById("i_ctrl"), ctrl);
+  }
+  [iConsol,nPct,nSub].forEach(function(e){e.addEventListener("input",calcInc);});
+
+  // checklist
+  var boxes=document.querySelectorAll("#cl input");
+  function upd(){
+    var done=0; boxes.forEach(function(b){ if(b.checked){done++; b.closest("li").classList.add("done");} else b.closest("li").classList.remove("done"); });
+    document.getElementById("cl_bar").style.width=(done/boxes.length*100)+"%";
+    document.getElementById("cl_count").textContent=done+" of "+boxes.length+" complete";
+  }
+  boxes.forEach(function(b){b.addEventListener("change",upd);});
+
+  // toolbar
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    document.querySelectorAll("input.fill").forEach(function(e){e.value="";});
+    document.querySelectorAll("#cl input").forEach(function(e){e.checked=false;});
+    document.querySelectorAll(".live").forEach(function(e){e.innerHTML="&mdash;";});
+    document.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");});
+    document.querySelectorAll(".tree-out").forEach(function(o){o.classList.remove("open");});
+    document.getElementById("x_verdict").className="verdict n";
+    document.getElementById("x_verdict").textContent="Enter the total fair value, book value, and allocations to see the residual.";
+    document.getElementById("g_verdict").className="verdict n";
+    document.getElementById("g_verdict").textContent="Enter the figures to compute each interest's goodwill.";
+    upd();
+  });
+  document.getElementById("printBtn").addEventListener("click",function(){window.print();});
+})();
+</script>
+</body>
+</html>
