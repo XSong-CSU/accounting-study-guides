@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 2 Workflow — Acquisition Method (Miller / Richmond)</title>
+<style>
+  :root{
+    --navy:#13294b; --navy2:#1f3a63; --teal:#0d7d7d; --teal-soft:#e6f3f3;
+    --gold:#c08a1e; --gold-soft:#fbf3df; --ink:#1c2530; --muted:#5a6675;
+    --line:#d8dee7; --bg:#f4f6f9; --card:#ffffff;
+    --tb:#1f6f4a; --tb-soft:#e7f3ec; --ex:#7a3da6; --ex-soft:#f3eafa;
+    --ok:#1f8a4c; --warn:#b25b00;
+    --shadow:0 1px 3px rgba(20,40,70,.08),0 6px 20px rgba(20,40,70,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;font-size:15.5px}
+  a{color:var(--teal)}
+  header.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;
+    padding:26px 22px 22px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px}
+  header.hero .wrap{padding:0}
+  .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#9fc6e8;font-weight:700}
+  header h1{margin:.25em 0 .15em;font-size:27px;line-height:1.18}
+  header p.sub{margin:.2em 0 0;color:#cfe0f1;font-size:15px;max-width:760px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .legend .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12.5px}
+  .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;
+    padding:2px 9px;border-radius:999px;vertical-align:middle}
+  .badge.tb{background:var(--tb-soft);color:var(--tb);border:1px solid #bfe0cd}
+  .badge.ex{background:var(--ex-soft);color:var(--ex);border:1px solid #ddc7ee}
+
+  nav.toc{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(20,40,70,.05)}
+  nav.toc .wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:9px 18px}
+  nav.toc a{font-size:12.5px;text-decoration:none;color:var(--navy);background:#eef2f7;
+    border:1px solid var(--line);padding:4px 10px;border-radius:7px;font-weight:600}
+  nav.toc a:hover{background:var(--teal-soft);border-color:#bfe0e0}
+
+  main{padding:24px 0 70px}
+  section.step{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:22px 24px;margin:18px 0}
+  .step-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+  .num{flex:none;width:40px;height:40px;border-radius:11px;background:var(--navy);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:18px}
+  .num.path{background:var(--teal)}
+  .step-head h2{margin:.1em 0;font-size:20px}
+  .step-head .src{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .lead{color:var(--muted);margin:.2em 0 1em}
+
+  .callout{border-left:4px solid var(--teal);background:var(--teal-soft);
+    border-radius:0 8px 8px 0;padding:11px 14px;margin:12px 0;font-size:14px}
+  .callout.gold{border-color:var(--gold);background:var(--gold-soft)}
+  .callout.tb{border-color:var(--tb);background:var(--tb-soft)}
+  .callout.ex{border-color:var(--ex);background:var(--ex-soft)}
+
+  .reveal-btn{appearance:none;cursor:pointer;border:1px dashed var(--teal);color:var(--teal);
+    background:#fff;border-radius:8px;padding:7px 13px;font-weight:700;font-size:13.5px;margin-top:6px}
+  .reveal-btn:hover{background:var(--teal-soft)}
+  .reveal-body{display:none;margin-top:10px;border:1px solid #bfe0e0;background:#f6fbfb;
+    border-radius:10px;padding:12px 14px;font-size:14px}
+  .reveal-body.open{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .reveal-body h4{margin:.2em 0 .4em;color:var(--navy)}
+  .reveal-body code{background:#eef2f7;padding:1px 6px;border-radius:5px;font-size:13px}
+
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  th{background:#eef2f7;font-weight:700;color:var(--navy)}
+  td.num-cell,th.num-cell{text-align:right;font-variant-numeric:tabular-nums}
+  tr.total td{background:#f7f9fc;font-weight:800;border-top:2px solid var(--navy)}
+  .data-table td.cr{color:#9a3b3b}
+  input.fill{width:130px;text-align:right;border:1px solid var(--line);border-radius:6px;
+    padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums;background:#fffdf6}
+  input.fill:focus{outline:2px solid var(--teal);border-color:var(--teal);background:#fff}
+  input.fill.wide{width:100%}
+  .live{display:inline-block;min-width:120px;text-align:right;font-weight:800;
+    font-variant-numeric:tabular-nums;color:var(--navy);background:#eef6f6;border-radius:6px;padding:4px 9px}
+  .verdict{margin-top:10px;font-weight:700}
+  .verdict.g{color:var(--ok)} .verdict.b{color:var(--warn)} .verdict.n{color:var(--muted)}
+
+  .tree{display:grid;gap:10px;margin:6px 0}
+  .opt{border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:#fafbfd}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft)}
+  .opt.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-soft)}
+  .opt b{color:var(--navy)}
+  .tree-out{display:none;margin-top:10px}
+  .tree-out.open{display:block}
+
+  .je{width:100%;font-size:14px}
+  .je td{vertical-align:middle}
+  .je .acct{width:auto}
+  .je .dr,.je .crc{width:140px}
+  .je .indent{padding-left:34px;color:var(--muted)}
+  .hint{color:var(--muted);font-size:12.5px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .checklist{list-style:none;padding:0;margin:8px 0}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);
+    border-radius:9px;margin-bottom:7px;background:#fafbfd}
+  .checklist input{margin-top:3px;width:18px;height:18px;accent-color:var(--teal)}
+  .checklist li.done{background:var(--tb-soft);border-color:#bfe0cd}
+  .progress{height:10px;border-radius:6px;background:#e6ebf2;overflow:hidden;margin:6px 0 2px}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--tb));transition:width .3s}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .btn{cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:8px;
+    padding:8px 14px;font-weight:700;font-size:13.5px}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn:hover{opacity:.92}
+  footer{color:var(--muted);font-size:12.5px;text-align:center;padding:24px 18px 50px}
+  .pill{font-size:11px;font-weight:700;background:#eef2f7;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--muted)}
+  details.data > summary{cursor:pointer;font-weight:700;color:var(--navy);padding:6px 0}
+  @media print{nav.toc{display:none}.reveal-btn,.btn,.toolbar{display:none}.reveal-body{display:block!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Advanced Accounting · Chapter 2 · Consolidation of Financial Information</div>
+    <h1>A Reliable Workflow for the Acquisition Method</h1>
+    <p class="sub">A step-by-step problem-solving routine built <strong>directly from the textbook method</strong> (LO 2-4 → 2-7, Exhibits 2.4–2.6), applied to the Miller / Richmond comprehensive illustration. Fill in your own figures as you go — the reveal panels explain the <em>method</em>, never the answer.</p>
+    <div class="legend">
+      <span class="chip"><span class="badge tb">TEXTBOOK</span> Procedure taken from your Chapter 2 reading</span>
+      <span class="chip"><span class="badge ex">STUDY AID</span> General good-practice idea (outside the textbook)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#use">How to use</a>
+  <a href="#s0">0 · Classify</a>
+  <a href="#s1">1 · Consideration</a>
+  <a href="#s2">2 · Net FV</a>
+  <a href="#s3">3 · Goodwill?</a>
+  <a href="#costs">Costs</a>
+  <a href="#pathA">a.1 Dissolution</a>
+  <a href="#pathB">a.2 Worksheet</a>
+  <a href="#partb">Part (b) $26</a>
+  <a href="#check">Checklist</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+
+<main class="wrap">
+
+  <!-- HOW TO USE -->
+  <section class="step" id="use">
+    <div class="step-head"><div class="num">★</div><div>
+      <h2>How to use this workflow</h2>
+      <div class="src">Designed for both class demonstration and solo practice.</div>
+    </div></div>
+    <p class="lead">Work the seven boxes in order. Every box has three parts: <strong>the textbook rule</strong> (what the chapter tells you to do), <strong>a place to write your own numbers</strong>, and a <strong>"Show the method" button</strong> that explains <em>how</em> to get the figure — the formula and the decision rule, but never the final answer. The same routine works for any acquisition problem; only the numbers change.</p>
+    <div class="callout gold">
+      <strong>The big idea (textbook).</strong> The acquisition method values a combination from the <em>acquirer's</em> point of view in three measurements: (1) the <strong>consideration transferred</strong>, (2) the <strong>net identifiable assets acquired at fair value</strong>, and (3) the <strong>difference</strong> between them, which is either <em>goodwill</em> or a <em>gain on bargain purchase</em>. Master those three and every variation in the chapter falls into place.
+    </div>
+
+    <details class="data">
+      <summary>► Show the given problem data (Miller / Richmond, 12/31)</summary>
+      <p class="hint">Reproduced from the problem statement (not the solution). Parentheses = credit balance.</p>
+      <table class="data-table">
+        <thead><tr>
+          <th>Account</th>
+          <th class="num-cell">Miller — Book Value</th>
+          <th class="num-cell">Richmond — Book Value</th>
+          <th class="num-cell">Richmond — Fair Value</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Cash</td><td class="num-cell">600,000</td><td class="num-cell">200,000</td><td class="num-cell">200,000</td></tr>
+          <tr><td>Receivables</td><td class="num-cell">900,000</td><td class="num-cell">300,000</td><td class="num-cell">290,000</td></tr>
+          <tr><td>Inventory</td><td class="num-cell">1,100,000</td><td class="num-cell">600,000</td><td class="num-cell">820,000</td></tr>
+          <tr><td>Buildings and equipment (net)</td><td class="num-cell">9,000,000</td><td class="num-cell">800,000</td><td class="num-cell">900,000</td></tr>
+          <tr><td>Unpatented technology</td><td class="num-cell">–0–</td><td class="num-cell">–0–</td><td class="num-cell">500,000</td></tr>
+          <tr><td>In-process research &amp; development</td><td class="num-cell">–0–</td><td class="num-cell">–0–</td><td class="num-cell">100,000</td></tr>
+          <tr><td>Accounts payable</td><td class="num-cell cr">(400,000)</td><td class="num-cell cr">(200,000)</td><td class="num-cell cr">(200,000)</td></tr>
+          <tr><td>Notes payable</td><td class="num-cell cr">(3,400,000)</td><td class="num-cell cr">(1,100,000)</td><td class="num-cell cr">(1,100,000)</td></tr>
+          <tr class="total"><td>Net assets / Totals</td><td class="num-cell">7,800,000</td><td class="num-cell">600,000</td><td class="num-cell">1,510,000</td></tr>
+          <tr><td>Common stock — $20 par</td><td class="num-cell cr">(2,000,000)</td><td class="num-cell">—</td><td class="num-cell">—</td></tr>
+          <tr><td>Common stock — $5 par</td><td class="num-cell">—</td><td class="num-cell cr">(220,000)</td><td class="num-cell">—</td></tr>
+          <tr><td>Additional paid-in capital</td><td class="num-cell cr">(900,000)</td><td class="num-cell cr">(100,000)</td><td class="num-cell">—</td></tr>
+          <tr><td>Retained earnings, 1/1</td><td class="num-cell cr">(2,300,000)</td><td class="num-cell cr">(130,000)</td><td class="num-cell">—</td></tr>
+          <tr><td>Revenues</td><td class="num-cell cr">(6,000,000)</td><td class="num-cell cr">(900,000)</td><td class="num-cell">—</td></tr>
+          <tr><td>Expenses</td><td class="num-cell">3,400,000</td><td class="num-cell">750,000</td><td class="num-cell">—</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Additional information (not in the figures above).</strong> On 12/31 Miller issues <strong>50,000 shares</strong> of its $20-par common stock for all of Richmond's shares. Miller also agrees to pay former Richmond owners <strong>$250,000</strong> if profit projections are met over three years; the <strong>fair value of that contingency is $100,000</strong>. Miller pays <strong>$10,000</strong> stock-issuance costs and <strong>$20,000</strong> accounting and legal fees. Miller's stock fair value: <strong>$32</strong> per share for part (a), <strong>$26</strong> for part (b).
+      </div>
+    </details>
+  </section>
+
+  <!-- STEP 0 CLASSIFY -->
+  <section class="step" id="s0">
+    <div class="step-head"><div class="num">0</div><div>
+      <h2>Classify the problem before you compute <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-6 &amp; LO 2-7 — dissolution vs. separate incorporation</div>
+    </div></div>
+    <p class="lead">The textbook stresses that the legal form of the combination decides <em>which procedure</em> you use. Decide this first — it tells you whether you make a journal entry on the parent's books, build a consolidation worksheet, or both.</p>
+    <div class="tree">
+      <div class="opt" data-out="o-diss"><b>Is the acquired company dissolved?</b> (it stops being a separate legal entity) → record assets &amp; liabilities <em>directly on the parent's books</em> via a <strong>journal entry</strong>. <span class="hint">(This is requirement a.1.)</span></div>
+      <div class="opt" data-out="o-sep"><b>Does the acquired company keep separate incorporation?</b> (it keeps its own books) → no permanent merger of records; you build a <strong>consolidation worksheet</strong> each period. <span class="hint">(This is requirement a.2.)</span></div>
+    </div>
+    <div class="tree-out" id="o-diss"><div class="callout tb"><strong>Path A applies.</strong> Use the acquisition-method journal entry (Steps 1–3, then the entry in the "a.1 Dissolution" box). Subsidiary balances are absorbed permanently.</div></div>
+    <div class="tree-out" id="o-sep"><div class="callout tb"><strong>Path B applies.</strong> Use the six-step worksheet (Exhibit 2.6) in the "a.2 Worksheet" box. The companies' books stay separate; consolidation happens only on the worksheet.</div></div>
+    <div class="callout gold"><strong>This problem asks for both.</strong> Requirement a.1 = dissolution (journal entries); requirement a.2 = separate incorporation (worksheet). Steps 1–3 below feed <em>both</em> paths, so do them once and reuse the results.</div>
+  </section>
+
+  <!-- STEP 1 CONSIDERATION -->
+  <section class="step" id="s1">
+    <div class="step-head"><div class="num">1</div><div>
+      <h2>Measure the consideration transferred <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-4, Exhibit 2.4 — value everything the acquirer gives up, at fair value</div>
+    </div></div>
+    <p class="lead">Add up the fair value of what Miller hands over: stock issued (shares × fair value per share) plus the fair value of any contingent consideration. Type your figures; the total updates live.</p>
+    <table>
+      <tr><td>Shares issued × fair value per share</td><td class="num-cell"><input class="fill" id="c_shares" placeholder="shares"> &times; <input class="fill" id="c_fv" placeholder="$ / sh"></td></tr>
+      <tr><td>= Fair value of stock issued</td><td class="num-cell"><span class="live" id="c_stock">—</span></td></tr>
+      <tr><td>+ Fair value of contingent consideration</td><td class="num-cell"><input class="fill" id="c_cont" placeholder="$"></td></tr>
+      <tr><td>+ Cash or other assets given (if any)</td><td class="num-cell"><input class="fill" id="c_cash" placeholder="$"></td></tr>
+      <tr class="total"><td>Consideration transferred</td><td class="num-cell"><span class="live" id="c_total">—</span></td></tr>
+    </table>
+    <button class="reveal-btn" data-target="r1">Show the method ▸</button>
+    <div class="reveal-body" id="r1">
+      <h4>How the textbook builds this figure</h4>
+      <p>Consideration transferred = the <strong>fair value</strong> of all consideration the acquirer surrenders: cash, other assets, and stock issued measured at its fair value (<code>shares × FV per share</code>), <strong>plus the fair value of contingent consideration</strong> (recorded as a liability when payable in cash, or in equity when payable in stock).</p>
+      <p><strong>Watch-outs from the chapter:</strong></p>
+      <ul>
+        <li>Use the <em>fair value</em> of the contingency (its estimated/measured value), <em>not</em> the maximum dollar amount that might eventually be paid.</li>
+        <li><strong>Stock-issuance / registration costs are NOT part of consideration</strong> — they reduce Additional Paid-in Capital (see the Costs box).</li>
+        <li><strong>Accounting, legal, and other direct combination costs are NOT part of consideration</strong> — they are expensed when incurred.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 2 NET FV -->
+  <section class="step" id="s2">
+    <div class="step-head"><div class="num">2</div><div>
+      <h2>Identify &amp; measure the net identifiable assets at fair value <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-5 — recognize all identifiable assets acquired and liabilities assumed at acquisition-date fair value</div>
+    </div></div>
+    <p class="lead">List every identifiable asset and liability at <strong>fair value</strong> (the acquired company's book values do not matter here). Remember to add intangibles the subsidiary never recorded. Enter fair values (use a minus sign for liabilities); the net updates live.</p>
+    <table>
+      <tr><td>Cash</td><td class="num-cell"><input class="fill nfv" placeholder="FV"></td></tr>
+      <tr><td>Receivables</td><td class="num-cell"><input class="fill nfv" placeholder="FV"></td></tr>
+      <tr><td>Inventory</td><td class="num-cell"><input class="fill nfv" placeholder="FV"></td></tr>
+      <tr><td>Buildings and equipment (net)</td><td class="num-cell"><input class="fill nfv" placeholder="FV"></td></tr>
+      <tr><td>Unpatented technology <span class="hint">(previously unrecorded)</span></td><td class="num-cell"><input class="fill nfv" placeholder="FV"></td></tr>
+      <tr><td>In-process R&amp;D <span class="hint">(previously unrecorded)</span></td><td class="num-cell"><input class="fill nfv" placeholder="FV"></td></tr>
+      <tr><td>Accounts payable <span class="hint">(enter as negative)</span></td><td class="num-cell"><input class="fill nfv" placeholder="–FV"></td></tr>
+      <tr><td>Notes payable <span class="hint">(enter as negative)</span></td><td class="num-cell"><input class="fill nfv" placeholder="–FV"></td></tr>
+      <tr class="total"><td>Net identifiable assets at fair value</td><td class="num-cell"><span class="live" id="nfv_total">—</span></td></tr>
+    </table>
+    <button class="reveal-btn" data-target="r2">Show the method ▸</button>
+    <div class="reveal-body" id="r2">
+      <h4>How the textbook builds this figure</h4>
+      <p>Under the acquisition method, you recognize <strong>each identifiable asset acquired and liability assumed at its acquisition-date fair value</strong> — independently of what the consideration was. Three points the chapter emphasizes:</p>
+      <ul>
+        <li><strong>Fair value, not book value.</strong> Ignore the subsidiary's carrying amounts; use the fair-value column.</li>
+        <li><strong>Recognize previously unrecorded intangibles</strong> if they are identifiable (e.g., unpatented technology, in-process R&amp;D, trademarks) even though they were never on the subsidiary's books.</li>
+        <li><strong>Subtract liabilities assumed</strong> at fair value. The result is "net identifiable assets at fair value." It is <em>not</em> goodwill yet.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 3 GOODWILL -->
+  <section class="step" id="s3">
+    <div class="step-head"><div class="num">3</div><div>
+      <h2>Compare: goodwill or bargain purchase? <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-5, Exhibit 2.4 — the single difference that drives everything else</div>
+    </div></div>
+    <p class="lead">Subtract Step 2 from Step 1. The sign of the difference tells you what to record. This box pulls your own Step 1 and Step 2 figures — it reports only the <em>rule</em>, never the textbook answer.</p>
+    <table>
+      <tr><td>Consideration transferred (Step 1)</td><td class="num-cell"><span class="live" id="g_consid">—</span></td></tr>
+      <tr><td>− Net identifiable assets at fair value (Step 2)</td><td class="num-cell"><span class="live" id="g_net">—</span></td></tr>
+      <tr class="total"><td>Difference</td><td class="num-cell"><span class="live" id="g_diff">—</span></td></tr>
+    </table>
+    <div class="verdict n" id="g_verdict">Enter figures in Steps 1 and 2 to see which rule applies.</div>
+    <button class="reveal-btn" data-target="r3">Show the decision rule ▸</button>
+    <div class="reveal-body" id="r3">
+      <h4>The three outcomes (Exhibit 2.4)</h4>
+      <ul>
+        <li><strong>Consideration &gt; net identifiable FV → record GOODWILL</strong> (a debit asset) for the excess.</li>
+        <li><strong>Consideration = net identifiable FV →</strong> no goodwill and no gain.</li>
+        <li><strong>Consideration &lt; net identifiable FV → record a GAIN ON BARGAIN PURCHASE</strong> for the shortfall (the acquirer paid less than the net fair value received). The chapter notes bargain purchases are uncommon and warrant re-checking your fair-value measurements before concluding.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COSTS -->
+  <section class="step" id="costs">
+    <div class="step-head"><div class="num">$</div><div>
+      <h2>Handle the related costs correctly <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-6, Exhibit 2.5 — three cost categories, three different treatments</div>
+    </div></div>
+    <p class="lead">A reliable solver disposes of the "extra" dollar amounts before journalizing, so they never get mixed into consideration by accident.</p>
+    <table>
+      <thead><tr><th>Cost type</th><th>Example in this problem</th><th>Acquisition-method treatment</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Direct combination costs</strong> (accounting, legal, finder's fees)</td><td>$20,000 accounting &amp; legal fees</td><td>Expense as incurred</td></tr>
+        <tr><td><strong>Stock issuance / registration costs</strong></td><td>$10,000 stock-issue costs</td><td>Reduce Additional Paid-in Capital (a debit to APIC)</td></tr>
+        <tr><td><strong>Indirect / internal costs</strong></td><td>(e.g., internal staff time)</td><td>Expense as incurred</td></tr>
+      </tbody>
+    </table>
+    <div class="callout gold"><strong>None of these change the consideration transferred.</strong> They are recorded separately, so removing them up front keeps Step 1 clean.</div>
+  </section>
+
+  <!-- PATH A DISSOLUTION -->
+  <section class="step" id="pathA">
+    <div class="step-head"><div class="num path">a.1</div><div>
+      <h2>Path A — Dissolution: journal entries on Miller's books <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-6 — Richmond is dissolved, so Miller records the acquisition directly</div>
+    </div></div>
+    <p class="lead">Because Richmond ceases to exist, Miller brings the acquired assets and liabilities onto its own books at <strong>fair value</strong>, plus goodwill (from Step 3), and records the consideration given. Fill the template; debits and credits should equal.</p>
+    <table class="je">
+      <thead><tr><th class="acct">Account</th><th class="dr num-cell">Debit</th><th class="crc num-cell">Credit</th></tr></thead>
+      <tbody>
+        <tr><td>Cash, Receivables, Inventory, Buildings &amp; equipment (each at FV)</td><td class="num-cell"><input class="fill" placeholder="$"></td><td></td></tr>
+        <tr><td>Unpatented technology &amp; In-process R&amp;D (at FV)</td><td class="num-cell"><input class="fill" placeholder="$"></td><td></td></tr>
+        <tr><td>Goodwill <span class="hint">(only if Step 3 is positive)</span></td><td class="num-cell"><input class="fill" placeholder="$"></td><td></td></tr>
+        <tr><td class="indent">Accounts payable &amp; Notes payable (at FV)</td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+        <tr><td class="indent">Common stock (shares issued × par)</td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+        <tr><td class="indent">Additional paid-in capital (excess over par, less stock-issue costs)</td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+        <tr><td class="indent">Contingent performance liability (at FV)</td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+        <tr><td class="indent">Gain on bargain purchase <span class="hint">(only if Step 3 is negative)</span></td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+      </tbody>
+    </table>
+    <div class="grid2">
+      <button class="reveal-btn" data-target="rA">Show the method ▸</button>
+    </div>
+    <div class="reveal-body" id="rA">
+      <h4>How the dissolution entry is built (textbook)</h4>
+      <ul>
+        <li><strong>Debit</strong> each identifiable asset at fair value; <strong>credit</strong> each liability at fair value.</li>
+        <li><strong>Debit Goodwill</strong> if consideration exceeded net FV (Step 3 positive); <strong>credit Gain on bargain purchase</strong> if it was less (Step 3 negative).</li>
+        <li><strong>Credit the consideration:</strong> Common Stock at par (shares × par), Additional Paid-in Capital for the fair value above par, and a Contingent Performance Liability at its fair value.</li>
+        <li><strong>Separately</strong>, record the two cost entries: debit an expense for the $20,000 direct costs (credit Cash); debit APIC for the $10,000 stock-issuance costs (credit Cash).</li>
+      </ul>
+      <p class="hint">Self-check: total debits must equal total credits, and the net amount credited for stock + contingency should equal your Step 1 consideration.</p>
+    </div>
+  </section>
+
+  <!-- PATH B WORKSHEET -->
+  <section class="step" id="pathB">
+    <div class="step-head"><div class="num path">a.2</div><div>
+      <h2>Path B — Separate incorporation: the six-step worksheet <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 2-7, Exhibit 2.6 — Richmond keeps its own books, so consolidate on a worksheet</div>
+    </div></div>
+    <p class="lead">When the subsidiary survives, no merger of records occurs; you consolidate on a worksheet each period. The chapter lays out exactly six steps — follow them in order.</p>
+
+    <table>
+      <thead><tr><th style="width:60px">Step</th><th>What you do (textbook)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td><strong>Fair-value allocation schedule.</strong> Consideration transferred (Step 1) − subsidiary's book value of net assets = excess; allocate the excess to specific assets/liabilities for their FV − BV differences; any remainder is goodwill.</td></tr>
+        <tr><td><strong>2</strong></td><td><strong>Enter the separate balances.</strong> Place each company's account balances in their own columns (income statement, then retained earnings, then balance sheet).</td></tr>
+        <tr><td><strong>3</strong></td><td><strong>Entry S.</strong> Eliminate the subsidiary's stockholders' equity (Common Stock, APIC, and Retained Earnings <em>as of the acquisition date</em>) against the Investment account. <span class="hint">For a date-of-acquisition worksheet whose acquisition falls on the year-end, that means the subsidiary's 12/31 retained earnings, not its 1/1 balance.</span></td></tr>
+        <tr><td><strong>4</strong></td><td><strong>Entry A.</strong> Recognize the fair-value allocations from Step 1 (assign the excess to the specific assets, intangibles, and goodwill) against the remaining Investment balance.</td></tr>
+        <tr><td><strong>5</strong></td><td><strong>Add across.</strong> For each row: parent + subsidiary ± consolidation entries = consolidated total.</td></tr>
+        <tr><td><strong>6</strong></td><td><strong>Combine vertically.</strong> Revenues − expenses = net income; carry net income to the retained-earnings statement; carry ending retained earnings to the balance sheet.</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin:18px 0 4px;color:var(--navy)">Step 1 worksheet — Fair-value allocation schedule</h4>
+    <table>
+      <tr><td>Consideration transferred (from Step 1)</td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+      <tr><td>− Book value of subsidiary's net assets</td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+      <tr class="total"><td>= Excess fair value over book value</td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+      <tr><td colspan="2" class="hint">Allocate the excess to each asset/liability for its FV − BV difference (inventory, buildings, receivables, unpatented technology, IPR&amp;D, notes payable…); whatever is left over is <strong>Goodwill</strong>.</td></tr>
+    </table>
+
+    <div class="grid2">
+      <div>
+        <h4 style="margin:14px 0 4px;color:var(--navy)">Entry S (Step 3)</h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Common stock (sub)</td><td class="num-cell"><input class="fill" style="width:90px"></td><td></td></tr>
+            <tr><td>Additional paid-in capital (sub)</td><td class="num-cell"><input class="fill" style="width:90px"></td><td></td></tr>
+            <tr><td>Retained earnings at acquisition date (sub)</td><td class="num-cell"><input class="fill" style="width:90px"></td><td></td></tr>
+            <tr><td class="indent">Investment in Richmond</td><td></td><td class="num-cell"><input class="fill" style="width:90px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin:14px 0 4px;color:var(--navy)">Entry A (Step 4)</h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Inventory / Buildings / Tech / IPR&amp;D…</td><td class="num-cell"><input class="fill" style="width:90px"></td><td></td></tr>
+            <tr><td>Goodwill</td><td class="num-cell"><input class="fill" style="width:90px"></td><td></td></tr>
+            <tr><td>Receivables / Notes payable adj.</td><td class="num-cell"><input class="fill" style="width:90px"></td><td></td></tr>
+            <tr><td class="indent">Investment in Richmond</td><td></td><td class="num-cell"><input class="fill" style="width:90px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="reveal-btn" data-target="rB">Show the method ▸</button>
+    <div class="reveal-body" id="rB">
+      <h4>Why Entry S and Entry A work (textbook)</h4>
+      <p><strong>Entry S</strong> removes the subsidiary's stockholders' equity at the acquisition date so it isn't double-counted, and offsets the portion of the Investment account that represents book value. <span class="hint">(On a date-of-acquisition worksheet the subsidiary's own pre-acquisition revenues, expenses, and beginning retained earnings are not consolidated, so consolidated revenues and retained earnings 1/1 come from the parent only.)</span> <strong>Entry A</strong> adds the fair-value increments and goodwill identified in the Step 1 schedule, offsetting the rest of the Investment account. Together they reduce the parent's Investment account to zero on the worksheet, replacing it with the subsidiary's actual assets and liabilities at fair value. After the entries, <strong>add across (Step 5)</strong> and <strong>combine vertically (Step 6)</strong> to reach consolidated totals.</p>
+      <p class="hint">Self-check: after Entry S + Entry A, the Investment account should net to zero in the consolidated column.</p>
+    </div>
+  </section>
+
+  <!-- PART B -->
+  <section class="step" id="partb">
+    <div class="step-head"><div class="num">b</div><div>
+      <h2>Part (b) — Re-run with a $26 share fair value <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">Sensitivity: what changes when the consideration falls?</div>
+    </div></div>
+    <p class="lead">Don't re-do the whole problem. Only one input changed (fair value per share), so only the figures that depend on it can change. Re-run the relevant steps:</p>
+    <ol>
+      <li><strong>Step 1 again.</strong> Recompute consideration transferred with $26 instead of $32. (Net identifiable FV in Step 2 does <em>not</em> change.)</li>
+      <li><strong>Step 3 again.</strong> Re-compare the new consideration to the unchanged net identifiable FV, and re-read the decision rule. The <em>sign</em> of the difference may flip.</li>
+      <li><strong>Describe the effect.</strong> State how the consolidated balances differ from part (a) given the new outcome of the Step 3 comparison.</li>
+    </ol>
+    <button class="reveal-btn" data-target="rPB">Show what to look for ▸</button>
+    <div class="reveal-body" id="rPB">
+      <h4>The reasoning (rule only)</h4>
+      <p>Lowering the per-share fair value lowers the consideration transferred while the net identifiable fair value stays the same. Whenever consideration drops <em>below</em> net identifiable fair value, Step 3's rule changes the outcome: the excess that would have been recorded as <strong>goodwill</strong> shrinks, and if consideration falls below net FV you instead record a <strong>gain on bargain purchase</strong>. Trace that single change through the journal entry (Path A) or the Step 1 allocation schedule and Entry A (Path B) and describe the resulting differences. <em>Use your own recomputed figures — the rule, not the number, is the point.</em></p>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="step" id="check">
+    <div class="step-head"><div class="num">✓</div><div>
+      <h2>Reliability checklist <span class="badge ex">STUDY AID</span></h2>
+      <div class="src">A self-verification routine — habits that catch the common errors</div>
+    </div></div>
+    <p class="lead">The textbook gives the method; this checklist is a general study habit to make the method <em>reliable</em>. Tick each item before you call the problem done.</p>
+    <div class="progress"><span id="cl_bar"></span></div>
+    <div class="hint" id="cl_count">0 of 8 complete</div>
+    <ul class="checklist" id="cl">
+      <li><input type="checkbox"> I classified the combination (dissolution vs. separate incorporation) before computing.</li>
+      <li><input type="checkbox"> Consideration uses the <em>fair value</em> of the contingency, not the maximum payout.</li>
+      <li><input type="checkbox"> Stock-issuance costs went to APIC; direct (legal/accounting) costs were expensed — neither touched consideration.</li>
+      <li><input type="checkbox"> Net identifiable assets use fair values, including previously unrecorded intangibles.</li>
+      <li><input type="checkbox"> I compared consideration to net FV and applied the correct rule (goodwill vs. bargain gain).</li>
+      <li><input type="checkbox"> Dissolution entry: total debits = total credits.</li>
+      <li><input type="checkbox"> Worksheet: Entry S + Entry A reduce the Investment account to zero.</li>
+      <li><input type="checkbox"> Part (b): I re-ran only the share-dependent steps and re-checked the Step 3 sign.</li>
+    </ul>
+    <div class="toolbar">
+      <button class="btn ghost" id="resetBtn">Reset all inputs</button>
+      <button class="btn" id="printBtn">Print / Save as PDF</button>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="step" id="sources">
+    <div class="step-head"><div class="num">i</div><div>
+      <h2>Where each idea comes from</h2>
+      <div class="src">Textbook-first, with clearly separated outside ideas</div>
+    </div></div>
+    <div class="callout tb">
+      <strong><span class="badge tb">TEXTBOOK</span> Straight from your Chapter 2 reading.</strong> The whole spine of this workflow — the three acquisition-method measurements (consideration, net identifiable FV, the difference), the goodwill-vs-bargain-purchase rule (Exhibit 2.4), the three cost treatments (Exhibit 2.5), the dissolution journal-entry approach (LO 2-6), and the six-step worksheet with Entry S and Entry A (LO 2-7, Exhibit 2.6) — is taken directly from the chapter. Use this as your primary method.
+    </div>
+    <div class="callout ex">
+      <strong><span class="badge ex">STUDY AID</span> Helpful ideas from general practice (not the textbook).</strong> These are common study/teaching techniques you may layer on top — they don't change the accounting, just make it more reliable:
+      <ul>
+        <li><strong>"Classify first" framing</strong> as an explicit Step 0 decision tree — a study-skills habit, not a textbook step.</li>
+        <li><strong>The reliability checklist and debit=credit / Investment-nets-to-zero self-checks</strong> — standard error-catching practice.</li>
+        <li><strong>Sensitivity thinking for part (b)</strong> ("change one input, re-run only what depends on it") — a general problem-solving heuristic.</li>
+        <li><strong>Building the schedule in a spreadsheet with cross-foot checks</strong> — laying the steps out in a spreadsheet and cross-footing the totals is an easy way to catch arithmetic slips.</li>
+      </ul>
+      <span class="hint">This workflow teaches the method only — it contains no solution figures, so you can practice every step without spoiling the answer.</span>
+    </div>
+  </section>
+
+  <footer>
+    Built for in-class demonstration and self-study · Method sourced from Chapter 2 (Hoyle-style Advanced Accounting), LO 2-4 → 2-7, Exhibits 2.4–2.6 · No solution figures are included.
+  </footer>
+</main>
+
+<script>
+(function(){
+  function num(v){ if(v==null) return NaN; var s=(""+v).replace(/[^0-9.\-]/g,""); return s===""?NaN:parseFloat(s); }
+  function fmt(n){ if(isNaN(n)) return "—"; return (n<0?"-$":"$")+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0}); }
+
+  // reveal toggles
+  document.querySelectorAll(".reveal-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var t=document.getElementById(b.dataset.target);
+      var open=t.classList.toggle("open");
+      b.textContent=b.textContent.replace(/▸|▾/,open?"▾":"▸");
+    });
+  });
+
+  // classify tree
+  document.querySelectorAll(".opt").forEach(function(o){
+    o.addEventListener("click",function(){
+      o.classList.toggle("sel");
+      var out=document.getElementById(o.dataset.out);
+      out.classList.toggle("open", o.classList.contains("sel"));
+    });
+  });
+
+  // Step 1 consideration
+  var c_shares=document.getElementById("c_shares"),c_fv=document.getElementById("c_fv"),
+      c_cont=document.getElementById("c_cont"),c_cash=document.getElementById("c_cash");
+  function calcConsid(){
+    var stock = num(c_shares.value)*num(c_fv.value);
+    if(isNaN(stock)) stock=NaN;
+    document.getElementById("c_stock").textContent = fmt(stock);
+    var tot=(isNaN(stock)?0:stock)+(num(c_cont.value)||0)+(num(c_cash.value)||0);
+    var any = !isNaN(stock)|| !isNaN(num(c_cont.value)) || !isNaN(num(c_cash.value));
+    document.getElementById("c_total").textContent = any?fmt(tot):"—";
+    document.getElementById("g_consid").textContent = any?fmt(tot):"—";
+    calcGoodwill(any?tot:NaN);
+    return any?tot:NaN;
+  }
+  [c_shares,c_fv,c_cont,c_cash].forEach(function(e){e.addEventListener("input",calcConsid);});
+
+  // Step 2 net FV
+  function calcNet(){
+    var sum=0, any=false;
+    document.querySelectorAll(".nfv").forEach(function(e){
+      var v=num(e.value); if(!isNaN(v)){sum+=v;any=true;}
+    });
+    document.getElementById("nfv_total").textContent = any?fmt(sum):"—";
+    document.getElementById("g_net").textContent = any?fmt(sum):"—";
+    calcGoodwill();
+    return any?sum:NaN;
+  }
+  document.querySelectorAll(".nfv").forEach(function(e){e.addEventListener("input",calcNet);});
+
+  // Step 3 compare
+  function calcGoodwill(considOverride){
+    var consid = considOverride!==undefined ? considOverride : num(document.getElementById("g_consid").textContent);
+    var net = num(document.getElementById("g_net").textContent);
+    var vEl=document.getElementById("g_verdict"), dEl=document.getElementById("g_diff");
+    if(isNaN(consid)||isNaN(net)){ dEl.textContent="—"; vEl.className="verdict n";
+      vEl.textContent="Enter figures in Steps 1 and 2 to see which rule applies."; return; }
+    var diff=consid-net; dEl.textContent=fmt(diff);
+    if(Math.abs(diff)<0.5){ vEl.className="verdict n"; vEl.textContent="Consideration equals net fair value → no goodwill and no gain."; }
+    else if(diff>0){ vEl.className="verdict g"; vEl.textContent="Consideration exceeds net fair value → record GOODWILL for the difference."; }
+    else{ vEl.className="verdict b"; vEl.textContent="Consideration is below net fair value → record a GAIN ON BARGAIN PURCHASE for the difference (re-verify your fair values first)."; }
+  }
+
+  // checklist
+  var boxes=document.querySelectorAll("#cl input");
+  function upd(){
+    var done=0; boxes.forEach(function(b){ if(b.checked){done++; b.closest("li").classList.add("done");} else b.closest("li").classList.remove("done"); });
+    document.getElementById("cl_bar").style.width=(done/boxes.length*100)+"%";
+    document.getElementById("cl_count").textC
