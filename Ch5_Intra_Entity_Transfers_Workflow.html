@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 5 Workflow — Intra-Entity Asset Transactions (Pullman / Spencer)</title>
+<style>
+  :root{
+    --navy:#13294b; --navy2:#1f3a63; --teal:#0d7d7d; --teal-soft:#e6f3f3;
+    --gold:#c08a1e; --gold-soft:#fbf3df; --ink:#1c2530; --muted:#5a6675;
+    --line:#d8dee7; --bg:#f4f6f9; --card:#ffffff;
+    --tb:#1f6f4a; --tb-soft:#e7f3ec; --ex:#7a3da6; --ex-soft:#f3eafa;
+    --nci:#1f5fa6; --nci-soft:#e7eef8;
+    --down:#9a3b3b; --down-soft:#f8ecec; --up:#1f6f4a; --up-soft:#e7f3ec;
+    --ok:#1f8a4c; --warn:#b25b00;
+    --shadow:0 1px 3px rgba(20,40,70,.08),0 6px 20px rgba(20,40,70,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;font-size:15.5px}
+  a{color:var(--teal)}
+  header.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:26px 22px 22px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px}
+  header.hero .wrap{padding:0}
+  .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#9fc6e8;font-weight:700}
+  header h1{margin:.25em 0 .15em;font-size:27px;line-height:1.18}
+  header p.sub{margin:.2em 0 0;color:#cfe0f1;font-size:15px;max-width:780px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .legend .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12.5px}
+  .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;padding:2px 9px;border-radius:999px;vertical-align:middle}
+  .badge.tb{background:var(--tb-soft);color:var(--tb);border:1px solid #bfe0cd}
+  .badge.ex{background:var(--ex-soft);color:var(--ex);border:1px solid #ddc7ee}
+  .badge.nci{background:var(--nci-soft);color:var(--nci);border:1px solid #c2d4ee}
+  .badge.down{background:var(--down-soft);color:var(--down);border:1px solid #e6c4c4}
+  .badge.up{background:var(--up-soft);color:var(--up);border:1px solid #bfe0cd}
+
+  nav.toc{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(20,40,70,.05)}
+  nav.toc .wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:9px 18px}
+  nav.toc a{font-size:12.5px;text-decoration:none;color:var(--navy);background:#eef2f7;
+    border:1px solid var(--line);padding:4px 10px;border-radius:7px;font-weight:600}
+  nav.toc a:hover{background:var(--teal-soft);border-color:#bfe0e0}
+
+  main{padding:24px 0 70px}
+  section.step{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:22px 24px;margin:18px 0}
+  .step-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+  .num{flex:none;width:40px;height:40px;border-radius:11px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px}
+  .num.path{background:var(--teal)} .num.ncin{background:var(--nci)}
+  .step-head h2{margin:.1em 0;font-size:20px}
+  .step-head .src{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .lead{color:var(--muted);margin:.2em 0 1em}
+
+  .callout{border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:0 8px 8px 0;padding:11px 14px;margin:12px 0;font-size:14px}
+  .callout.gold{border-color:var(--gold);background:var(--gold-soft)}
+  .callout.tb{border-color:var(--tb);background:var(--tb-soft)}
+  .callout.ex{border-color:var(--ex);background:var(--ex-soft)}
+  .callout.nci{border-color:var(--nci);background:var(--nci-soft)}
+
+  .reveal-btn{appearance:none;cursor:pointer;border:1px dashed var(--teal);color:var(--teal);background:#fff;border-radius:8px;padding:7px 13px;font-weight:700;font-size:13.5px;margin-top:6px}
+  .reveal-btn:hover{background:var(--teal-soft)}
+  .reveal-body{display:none;margin-top:10px;border:1px solid #bfe0e0;background:#f6fbfb;border-radius:10px;padding:12px 14px;font-size:14px}
+  .reveal-body.open{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .reveal-body h4{margin:.2em 0 .4em;color:var(--navy)}
+  .reveal-body code{background:#eef2f7;padding:1px 6px;border-radius:5px;font-size:13px}
+
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  th{background:#eef2f7;font-weight:700;color:var(--navy)}
+  td.num-cell,th.num-cell{text-align:right;font-variant-numeric:tabular-nums}
+  tr.total td{background:#f7f9fc;font-weight:800;border-top:2px solid var(--navy)}
+  tr.subtot td{background:#fbfcfe;font-weight:700}
+  .data-table td.cr{color:#9a3b3b}
+  input.fill{width:130px;text-align:right;border:1px solid var(--line);border-radius:6px;padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums;background:#fffdf6}
+  input.fill:focus{outline:2px solid var(--teal);border-color:var(--teal);background:#fff}
+  input.fill.pct{width:70px}
+  .live{display:inline-block;min-width:120px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums;color:var(--navy);background:#eef6f6;border-radius:6px;padding:4px 9px}
+  .live.nci{color:var(--nci);background:var(--nci-soft)}
+  .live.pctout{color:var(--gold);background:var(--gold-soft)}
+  .verdict{margin-top:10px;font-weight:700}
+  .verdict.g{color:var(--ok)} .verdict.b{color:var(--warn)} .verdict.n{color:var(--muted)}
+
+  .tree{display:grid;gap:10px;margin:6px 0}
+  .opt{border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:#fafbfd}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft)}
+  .opt.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-soft)}
+  .opt b{color:var(--navy)}
+  .tree-out{display:none;margin-top:10px}
+  .tree-out.open{display:block}
+
+  .je{width:100%;font-size:14px}
+  .je td{vertical-align:middle}
+  .je .indent{padding-left:34px;color:var(--muted)}
+  .hint{color:var(--muted);font-size:12.5px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .checklist{list-style:none;padding:0;margin:8px 0}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:#fafbfd}
+  .checklist input{margin-top:3px;width:18px;height:18px;accent-color:var(--teal)}
+  .checklist li.done{background:var(--tb-soft);border-color:#bfe0cd}
+  .progress{height:10px;border-radius:6px;background:#e6ebf2;overflow:hidden;margin:6px 0 2px}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--tb));transition:width .3s}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .btn{cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:8px;padding:8px 14px;font-weight:700;font-size:13.5px}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn:hover{opacity:.92}
+  footer{color:var(--muted);font-size:12.5px;text-align:center;padding:24px 18px 50px}
+  details.data > summary{cursor:pointer;font-weight:700;color:var(--navy);padding:6px 0}
+  .entrytag{display:inline-grid;place-items:center;min-width:34px;height:30px;padding:0 6px;border-radius:8px;background:var(--teal);color:#fff;font-weight:800;font-size:13px;margin-right:6px;vertical-align:middle}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;font-size:13px}
+  .flow .box{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#fafbfd;font-weight:600}
+  .flow .arr{color:var(--muted);font-weight:800}
+  @media print{nav.toc{display:none}.reveal-btn,.btn,.toolbar{display:none}.reveal-body{display:block!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Advanced Accounting · Chapter 5 · Consolidated Statements — Intra-Entity Asset Transactions</div>
+    <h1>A Reliable Workflow for Intra-Entity Asset Transfers</h1>
+    <p class="sub">A step-by-step routine built <strong>directly from the textbook method</strong> (LO 5-1 → 5-7), applied to the Pullman / Spencer comprehensive illustration. The theme: when affiliates sell to each other, the "profit" isn't real yet — you <em>defer</em> it until the asset leaves the family. Fill in your own figures — the reveal panels explain the <em>method</em>, never the answer.</p>
+    <div class="legend">
+      <span class="chip"><span class="badge tb">TEXTBOOK</span> Procedure from your Chapter 5 reading</span>
+      <span class="chip"><span class="badge down">DOWN</span> Parent &rarr; Sub (controlling interest only)</span>
+      <span class="chip"><span class="badge up">UP</span> Sub &rarr; Parent (shared with NCI)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#use">How to use</a>
+  <a href="#s0">0 · Classify</a>
+  <a href="#acq">Acq. recap</a>
+  <a href="#inv">Inventory</a>
+  <a href="#land">Land</a>
+  <a href="#equip">Equipment</a>
+  <a href="#nci">NCI income</a>
+  <a href="#assembly">Worksheet order</a>
+  <a href="#check">Checklist</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+
+<main class="wrap">
+
+  <!-- HOW TO USE -->
+  <section class="step" id="use">
+    <div class="step-head"><div class="num">&#9733;</div><div>
+      <h2>How to use this workflow</h2>
+      <div class="src">Designed for both class demonstration and solo practice.</div>
+    </div></div>
+    <p class="lead">A consolidated entity can't make a profit selling to itself. When a parent and subsidiary transfer inventory, land, or equipment, any gain recorded on the affiliate's books is <strong>unrealized</strong> until that asset is finally sold to an <em>outside</em> party. Chapter 5 is a catalog of how to <strong>defer</strong> that profit now and <strong>recognize</strong> it later. Work the boxes by transfer type; each has the textbook rule, a calculator, and a "Show the method" button.</p>
+    <div class="callout gold">
+      <strong>The big idea (textbook).</strong> Every intra-entity transfer needs two things on the worksheet: (1) <strong>undo the artificial accounts</strong> the affiliates recorded (intra-entity sales/COGS, an intra-entity gain, an inflated asset basis), and (2) <strong>defer the unrealized profit</strong> until the year the asset is consumed or sold outside — at which point it becomes real and is recognized.
+    </div>
+    <div class="callout"><strong>Two questions answer almost everything.</strong> For each transfer ask: <strong>(1) Which direction?</strong> Downstream (parent&rarr;sub) keeps the profit with the controlling interest; upstream (sub&rarr;parent) shares it with the NCI. <strong>(2) What type of asset?</strong> Inventory (realized when resold/consumed), land (deferral persists with no depreciation), or a depreciable asset (deferral unwinds gradually via excess depreciation).</p></div>
+
+    <details class="data">
+      <summary>&#9658; Show the given problem data (Pullman / Spencer)</summary>
+      <p class="hint">Reproduced from the problem statement (not the solution). Parentheses = credit balance.</p>
+      <div class="callout tb" style="margin-top:4px">
+        <strong>Acquisition.</strong> On <strong>January 1, 2022</strong>, Pullman acquired <strong>80%</strong> of Spencer for <strong>$594,000</strong> cash. NCI fair value was <strong>$148,500</strong>; Spencer's book value was <strong>$610,000</strong>. Spencer held unrecorded <strong>patented technology</strong> (fair value $75,000, 10-yr life); any remaining excess was assigned to an <strong>indefinite-life trademark</strong>. Pullman applies the <strong>equity method</strong>.
+      </div>
+      <div class="callout up">
+        <strong><span class="badge up">UP</span> Inventory — Spencer sells to Pullman (upstream).</strong> Merchandise Pullman still held at year-end was always used in production the following period.
+        <table style="margin-top:8px">
+          <thead><tr><th>Year</th><th class="num-cell">Cost to Spencer</th><th class="num-cell">Transfer price</th><th class="num-cell">Gross profit rate</th><th class="num-cell">Still held at year-end (transfer price)</th></tr></thead>
+          <tbody>
+            <tr><td>2022</td><td class="num-cell">100,000</td><td class="num-cell">140,000</td><td class="num-cell">28.6%</td><td class="num-cell">20,000</td></tr>
+            <tr><td>2023</td><td class="num-cell">100,000</td><td class="num-cell">150,000</td><td class="num-cell">33.3%</td><td class="num-cell">30,000</td></tr>
+            <tr><td>2024</td><td class="num-cell">120,000</td><td class="num-cell">160,000</td><td class="num-cell">25.0%</td><td class="num-cell">68,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout down">
+        <strong><span class="badge down">DOWN</span> Land &amp; equipment — Pullman sells to Spencer (downstream).</strong>
+        <ul style="margin:6px 0">
+          <li><strong>Land:</strong> on <strong>January 1, 2024</strong> Pullman sold Spencer land for its <strong>$50,000</strong> fair value; original cost was <strong>$22,000</strong>. Spencer had made no payment by year-end (an intra-entity balance).</li>
+          <li><strong>Equipment:</strong> on <strong>January 1, 2023</strong> Pullman transferred equipment at its <strong>$80,000</strong> price; original cost was <strong>$100,000</strong> with a <strong>$44,000</strong> book value at the date of exchange; <strong>10-year</strong> remaining life, straight-line, no salvage.</li>
+        </ul>
+      </div>
+      <p class="hint" style="margin-top:12px">Trial balances at 12/31/2024:</p>
+      <table class="data-table">
+        <thead><tr><th>Account</th><th class="num-cell">Pullman — Dr (Cr)</th><th class="num-cell">Spencer — Dr (Cr)</th></tr></thead>
+        <tbody>
+          <tr><td>Sales</td><td class="num-cell cr">(900,000)</td><td class="num-cell cr">(500,000)</td></tr>
+          <tr><td>Cost of goods sold</td><td class="num-cell">598,000</td><td class="num-cell">300,000</td></tr>
+          <tr><td>Operating expenses</td><td class="num-cell">210,000</td><td class="num-cell">80,000</td></tr>
+          <tr><td>Gain on sale of land</td><td class="num-cell cr">(28,000)</td><td class="num-cell">&ndash;0&ndash;</td></tr>
+          <tr><td>Equity in earnings of Spencer</td><td class="num-cell cr">(60,000)</td><td class="num-cell">&ndash;0&ndash;</td></tr>
+          <tr class="subtot"><td>Net income</td><td class="num-cell cr">(180,000)</td><td class="num-cell cr">(120,000)</td></tr>
+          <tr><td>Retained earnings, 1/1/24</td><td class="num-cell cr">(620,000)</td><td class="num-cell cr">(430,000)</td></tr>
+          <tr><td>Dividends declared</td><td class="num-cell">55,000</td><td class="num-cell">50,000</td></tr>
+          <tr class="subtot"><td>Retained earnings, 12/31/24</td><td class="num-cell cr">(745,000)</td><td class="num-cell cr">(500,000)</td></tr>
+          <tr><td>Cash and accounts receivable</td><td class="num-cell">348,000</td><td class="num-cell">410,000</td></tr>
+          <tr><td>Inventory</td><td class="num-cell">430,400</td><td class="num-cell">190,000</td></tr>
+          <tr><td>Investment in Spencer</td><td class="num-cell">737,600</td><td class="num-cell">&ndash;0&ndash;</td></tr>
+          <tr><td>Land</td><td class="num-cell">454,000</td><td class="num-cell">280,000</td></tr>
+          <tr><td>Equipment</td><td class="num-cell">270,000</td><td class="num-cell">190,000</td></tr>
+          <tr><td>Accumulated depreciation</td><td class="num-cell cr">(180,000)</td><td class="num-cell cr">(50,000)</td></tr>
+          <tr><td>Liabilities</td><td class="num-cell cr">(715,000)</td><td class="num-cell cr">(120,000)</td></tr>
+          <tr><td>Common stock</td><td class="num-cell cr">(600,000)</td><td class="num-cell cr">(400,000)</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">The problem's parts (a)&ndash;(g) ask for: the sub's book-value growth, annual amortization, beginning &amp; ending inventory profit, the extra equipment depreciation, the parent's "Income of Spencer," consolidated totals, and the transfer worksheet entries — every one of which this workflow walks you through.</p>
+    </details>
+  </section>
+
+  <!-- STEP 0 CLASSIFY -->
+  <section class="step" id="s0">
+    <div class="step-head"><div class="num">0</div><div>
+      <h2>Classify every transfer first: direction &amp; type <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 5-5 — direction drives the NCI; type drives how the deferral unwinds</div>
+    </div></div>
+    <p class="lead">List each intra-entity transfer in the problem and tag it on two axes before computing anything. Click a tag to see what it implies.</p>
+    <div class="grid2">
+      <div>
+        <h4 style="margin:6px 0 4px;color:var(--navy)">Direction</h4>
+        <div class="tree">
+          <div class="opt" data-out="o-down"><b>Downstream</b> — parent sells to subsidiary. <span class="hint">Profit sits in the parent's books.</span></div>
+          <div class="opt" data-out="o-up"><b>Upstream</b> — subsidiary sells to parent. <span class="hint">Profit sits in the subsidiary's books.</span></div>
+        </div>
+        <div class="tree-out" id="o-down"><div class="callout down"><strong>Controlling interest only.</strong> The deferral/realization is attributed entirely to the parent. The <strong>NCI income computation is NOT adjusted</strong>.</div></div>
+        <div class="tree-out" id="o-up"><div class="callout up"><strong>Shared with the NCI.</strong> Because the profit is the subsidiary's, the deferral and later realization change the subsidiary's <em>realized</em> income — so they flow into the <strong>NCI income computation</strong> at the NCI %.</div></div>
+      </div>
+      <div>
+        <h4 style="margin:6px 0 4px;color:var(--navy)">Asset type</h4>
+        <div class="tree">
+          <div class="opt" data-out="o-inv"><b>Inventory</b> — resold or consumed. <span class="hint">Entries TI, G, *G.</span></div>
+          <div class="opt" data-out="o-land"><b>Land</b> — not depreciated. <span class="hint">Entries TL, *GL.</span></div>
+          <div class="opt" data-out="o-dep"><b>Depreciable asset</b> — equipment/buildings. <span class="hint">Entries TA, ED.</span></div>
+        </div>
+        <div class="tree-out" id="o-inv"><div class="callout tb"><strong>Realizes quickly.</strong> Deferred profit in ending inventory is recognized next period when the goods are sold/consumed outside.</div></div>
+        <div class="tree-out" id="o-land"><div class="callout tb"><strong>Deferral persists.</strong> With no depreciation, the deferred gain stays on the worksheet <em>every</em> year until the land is sold to an outsider.</div></div>
+        <div class="tree-out" id="o-dep"><div class="callout tb"><strong>Unwinds gradually.</strong> The buyer over-depreciates the inflated basis, so each year's "excess depreciation" recognizes a slice of the deferred gain over the remaining life.</div></div>
+      </div>
+    </div>
+    <div class="callout gold"><strong>For Pullman / Spencer:</strong> inventory is <span class="badge up">UP</span> (Spencer&rarr;Pullman), while land and equipment are <span class="badge down">DOWN</span> (Pullman&rarr;Spencer). So only the inventory deferrals touch the NCI; the land and equipment deferrals are all the parent's.</div>
+  </section>
+
+  <!-- ACQUISITION RECAP -->
+  <section class="step" id="acq">
+    <div class="step-head"><div class="num ncin">A</div><div>
+      <h2>Acquisition recap: excess, allocation, amortization <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">Carried from Ch.4 — you still need these for Entries A, E, and the NCI</div>
+    </div></div>
+    <p class="lead">The intra-entity work sits on top of the normal consolidation. Rebuild the day-one allocation: total fair value (consideration + NCI fair value) minus book value is the excess; assign it to identifiable items; the residual is goodwill or an indefinite intangible. Then amortize the finite-lived pieces.</p>
+    <table>
+      <tr><td>Consideration transferred (controlling)</td><td class="num-cell"><input class="fill" id="q_consid" placeholder="$"></td></tr>
+      <tr><td>+ Acquisition-date fair value of NCI</td><td class="num-cell"><input class="fill" id="q_nci" placeholder="$"></td></tr>
+      <tr class="subtot"><td>= Total acquisition-date fair value</td><td class="num-cell"><span class="live" id="q_total">&mdash;</span></td></tr>
+      <tr><td>&minus; Subsidiary book value</td><td class="num-cell"><input class="fill" id="q_book" placeholder="$"></td></tr>
+      <tr class="total"><td>= Excess fair value over book value</td><td class="num-cell"><span class="live" id="q_excess">&mdash;</span></td></tr>
+      <tr><td>&minus; Identified finite-life intangible/asset <span class="hint">(e.g., patented technology)</span></td><td class="num-cell"><input class="fill" id="q_fin" placeholder="$"></td></tr>
+      <tr class="total"><td>= Residual to indefinite intangible (trademark) <span class="hint">(not amortized)</span></td><td class="num-cell"><span class="live" id="q_resid">&mdash;</span></td></tr>
+      <tr><td>Annual amortization <span class="hint">(finite intangible &divide; life)</span> &nbsp; life: <input class="fill pct" id="q_life" placeholder="yrs"></td><td class="num-cell"><span class="live" id="q_amort">&mdash;</span></td></tr>
+    </table>
+    <button class="reveal-btn" data-target="rA">Show the method &#9656;</button>
+    <div class="reveal-body" id="rA">
+      <h4>How the textbook builds these (LO 4 carryover)</h4>
+      <p><code>Total FV = consideration + NCI fair value</code>; <code>Excess = Total FV &minus; book value</code>; assign to identifiable accounts, residual to goodwill or an indefinite intangible; <code>Annual amortization = finite allocation &divide; life</code>. The indefinite-life trademark and goodwill are never amortized. This annual amortization reduces the subsidiary's adjusted income and therefore also the NCI's income share.</p>
+    </div>
+  </section>
+
+  <!-- INVENTORY -->
+  <section class="step" id="inv">
+    <div class="step-head"><div class="num">I</div><div>
+      <h2>Inventory transfers: defer ending, realize beginning <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 5-2 → 5-4 — Entries TI, G, *G</div>
+    </div></div>
+    <p class="lead">Three things happen with intra-entity inventory: you erase the fake sale (TI), you defer the profit still sitting in <em>ending</em> inventory (G), and you recognize the profit that was deferred last year and is now sold (*G).</p>
+
+    <h4 style="margin:6px 0 2px;color:var(--navy)">Calculator — gross profit rate &amp; the two deferrals</h4>
+    <table>
+      <tr><td>Transfer price of the intra-entity sale (current year)</td><td class="num-cell"><input class="fill" id="iv_tp" placeholder="$"></td></tr>
+      <tr><td>Cost of the goods to the seller</td><td class="num-cell"><input class="fill" id="iv_cost" placeholder="$"></td></tr>
+      <tr class="subtot"><td>Gross profit rate <span class="hint">= (price &minus; cost) &divide; price</span></td><td class="num-cell"><span class="live pctout" id="iv_rate">&mdash;</span></td></tr>
+      <tr><td>Ending inventory still held (at transfer price)</td><td class="num-cell"><input class="fill" id="iv_endheld" placeholder="$"></td></tr>
+      <tr class="total"><td>= Unrealized profit to DEFER now (Entry G)</td><td class="num-cell"><span class="live" id="iv_defer">&mdash;</span></td></tr>
+      <tr><td colspan="2" class="hint" style="padding-top:10px">For the profit deferred <em>last</em> year and realized this year (Entry *G), use last year's figures:</td></tr>
+      <tr><td>Beginning inventory still held (at last year's transfer price)</td><td class="num-cell"><input class="fill" id="iv_begheld" placeholder="$"></td></tr>
+      <tr><td>Last year's gross profit rate &nbsp;<input class="fill pct" id="iv_begrate" placeholder="%"> %</td><td class="num-cell"></td></tr>
+      <tr class="total"><td>= Profit to REALIZE now (Entry *G)</td><td class="num-cell"><span class="live" id="iv_realize">&mdash;</span></td></tr>
+    </table>
+
+    <div class="grid2">
+      <div>
+        <h4 style="margin:14px 0 2px;color:var(--navy)"><span class="entrytag">*G</span>Realize beginning-inventory profit <span class="hint">(enter first)</span></h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Retained Earnings, 1/1 <span class="hint">(seller's)</span></td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Cost of Goods Sold</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin:14px 0 2px;color:var(--navy)"><span class="entrytag">TI</span>Eliminate the intra-entity sale</h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Sales <span class="hint">(transfer price)</span></td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Cost of Goods Sold</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin:14px 0 2px;color:var(--navy)"><span class="entrytag">G</span>Defer ending-inventory profit</h4>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Cost of Goods Sold <span class="hint">(unrealized profit in ending inventory)</span></td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Inventory</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="rInv">Show the method &#9656;</button>
+    <div class="reveal-body" id="rInv">
+      <h4>How the textbook builds these (LO 5-2 → 5-4)</h4>
+      <ul>
+        <li><strong>Gross profit rate</strong> <code>= (transfer price &minus; cost) &divide; transfer price</code>. Apply it to the inventory <em>still held</em> at year-end (stated at transfer price) to get the unrealized profit.</li>
+        <li><strong>Entry TI</strong> removes the intra-entity Sales and the matching Cost of Goods Sold — they net to zero for the combined entity, but both totals must come off.</li>
+        <li><strong>Entry G</strong> defers the current-year profit still in ending inventory: debit COGS (lowering consolidated income) and credit Inventory (removing the markup from the balance sheet).</li>
+        <li><strong>Entry *G</strong> is entered <em>first</em> because it fixes a beginning balance: it removes last year's deferred profit from the seller's beginning Retained Earnings and credits COGS so the now-realized profit lands in this year's income.</li>
+        <li><strong>Who is the "seller"?</strong> Downstream &rarr; parent's Retained Earnings; upstream &rarr; subsidiary's Retained Earnings (which is why upstream touches the NCI).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LAND -->
+  <section class="step" id="land">
+    <div class="step-head"><div class="num">L</div><div>
+      <h2>Land transfers: a deferral that just sits there <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 5-6 — Entries TL (year of transfer) and *GL (every year after)</div>
+    </div></div>
+    <p class="lead">An intra-entity land gain is deferred and, because land isn't depreciated, the deferral <strong>never unwinds on its own</strong> — it repeats every year until the land is sold outside.</p>
+    <table>
+      <tr><td>Transfer price (intra-entity)</td><td class="num-cell"><input class="fill" id="ld_tp" placeholder="$"></td></tr>
+      <tr><td>&minus; Original cost of the land to the seller</td><td class="num-cell"><input class="fill" id="ld_cost" placeholder="$"></td></tr>
+      <tr class="total"><td>= Intra-entity gain to defer</td><td class="num-cell"><span class="live" id="ld_gain">&mdash;</span></td></tr>
+    </table>
+    <div class="grid2">
+      <div>
+        <h4 style="margin:12px 0 2px;color:var(--navy)"><span class="entrytag">TL</span>Year of transfer</h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Gain on Sale of Land</td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Land</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin:12px 0 2px;color:var(--navy)"><span class="entrytag">*GL</span>Each later year still held</h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Retained Earnings, 1/1 <span class="hint">(seller's)</span></td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Land</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="reveal-btn" data-target="rLand">Show the method &#9656;</button>
+    <div class="reveal-body" id="rLand">
+      <h4>How the textbook handles land (LO 5-6)</h4>
+      <ul>
+        <li><strong>Gain</strong> <code>= transfer price &minus; original cost</code>. In the year of transfer, <strong>Entry TL</strong> removes the recorded "Gain on Sale of Land" and restores Land to its original cost.</li>
+        <li><strong>Every subsequent year the land is still held, Entry *GL</strong> repeats the deferral — but now the debit is to the seller's <em>beginning Retained Earnings</em> (the gain is in a prior period), still crediting Land.</li>
+        <li><strong>Year of outside sale:</strong> the deferred gain is finally recognized — debit the seller's beginning Retained Earnings, credit Gain on Sale of Land — so the full profit hits consolidated income that year.</li>
+        <li>Pullman&rarr;Spencer makes this <span class="badge down">downstream</span>, so the whole deferral belongs to the parent and the NCI is untouched.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT -->
+  <section class="step" id="equip">
+    <div class="step-head"><div class="num">E</div><div>
+      <h2>Depreciable-asset transfers: defer, then unwind <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 5-7 — Entries TA (remove gain / restore basis) and ED (excess depreciation)</div>
+    </div></div>
+    <p class="lead">When equipment is transferred above book value, the buyer depreciates an inflated basis. The unrealized gain is deferred (Entry TA) and then recognized a slice at a time as that over-depreciation is removed each year (Entry ED).</p>
+    <table>
+      <tr><td>Transfer price</td><td class="num-cell"><input class="fill" id="eq_tp" placeholder="$"></td></tr>
+      <tr><td>&minus; Book value at date of transfer <span class="hint">(cost &minus; accumulated depreciation)</span></td><td class="num-cell"><input class="fill" id="eq_bv" placeholder="$"></td></tr>
+      <tr class="subtot"><td>= Intra-entity gain (deferred)</td><td class="num-cell"><span class="live" id="eq_gain">&mdash;</span></td></tr>
+      <tr><td>Remaining useful life (years)</td><td class="num-cell"><input class="fill pct" id="eq_life" placeholder="yrs"></td></tr>
+      <tr class="subtot"><td>= Annual excess depreciation <span class="hint">(gain &divide; life)</span></td><td class="num-cell"><span class="live" id="eq_ed">&mdash;</span></td></tr>
+      <tr><td>Full years since transfer (before current year)</td><td class="num-cell"><input class="fill pct" id="eq_yrs" placeholder="yrs"></td></tr>
+      <tr><td>Beginning-RE adjustment in Entry TA <span class="hint">(gain &minus; excess dep already taken)</span></td><td class="num-cell"><span class="live" id="eq_taRE">&mdash;</span></td></tr>
+      <tr class="total"><td>Deferred gain still remaining at year-end</td><td class="num-cell"><span class="live" id="eq_remain">&mdash;</span></td></tr>
+    </table>
+    <div class="grid2">
+      <div>
+        <h4 style="margin:12px 0 2px;color:var(--navy)"><span class="entrytag">TA</span>Restore basis / defer gain <span class="hint">(year following: debit beginning R.E.)</span></h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Equipment <span class="hint">(restore to original cost)</span></td><td class="num-cell"><input class="fill" style="width:80px"></td><td></td></tr>
+            <tr><td>Gain on Sale / Retained Earnings, 1/1</td><td class="num-cell"><input class="fill" style="width:80px"></td><td></td></tr>
+            <tr><td class="indent">Accumulated Depreciation</td><td></td><td class="num-cell"><input class="fill" style="width:80px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin:12px 0 2px;color:var(--navy)"><span class="entrytag">ED</span>Remove this year's excess depreciation</h4>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="num-cell">Dr</th><th class="num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Accumulated Depreciation</td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Depreciation Expense</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="reveal-btn" data-target="rEq">Show the method &#9656;</button>
+    <div class="reveal-body" id="rEq">
+      <h4>How the textbook handles depreciable assets (LO 5-7)</h4>
+      <ul>
+        <li><strong>Gain</strong> <code>= transfer price &minus; book value at transfer</code>; <strong>excess depreciation</strong> <code>= gain &divide; remaining life</code>.</li>
+        <li><strong>Entry TA</strong> restores the asset and accumulated depreciation to their original-cost amounts and removes the gain. In the year of transfer the offset is "Gain on Sale"; in later years it's the seller's <em>beginning Retained Earnings</em>, reduced by the excess depreciation already recognized (<code>gain &minus; annual &times; prior years</code>).</li>
+        <li><strong>Entry ED</strong> removes the current year's over-depreciation: debit Accumulated Depreciation, credit Depreciation Expense — this is how the deferred gain is recognized, one annual slice at a time, over the remaining life.</li>
+        <li>Pullman&rarr;Spencer makes this <span class="badge down">downstream</span>, so the gain and its annual unwind belong entirely to the parent; the NCI is untouched.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- NCI -->
+  <section class="step" id="nci">
+    <div class="step-head"><div class="num ncin">N</div><div>
+      <h2>The noncontrolling-interest income computation <span class="badge nci">NCI</span></h2>
+      <div class="src">LO 5-5 — only UPSTREAM transfers change this</div>
+    </div></div>
+    <p class="lead">The NCI gets its percentage of the subsidiary's <em>realized</em> income. Start from the subsidiary's reported income, subtract excess amortization, then adjust for <strong>upstream</strong> deferrals only: subtract this year's deferred profit and add back last year's profit now realized. Downstream transfers do not appear here.</p>
+    <table>
+      <tr><td>NCI percentage</td><td class="num-cell"><input class="fill pct" id="ni_pct" placeholder="20"> %</td></tr>
+      <tr><td>Subsidiary reported net income</td><td class="num-cell"><input class="fill" id="ni_inc" placeholder="$"></td></tr>
+      <tr><td>&minus; Excess fair-value amortization</td><td class="num-cell"><input class="fill" id="ni_amort" placeholder="$"></td></tr>
+      <tr><td>&minus; Current-year UPSTREAM profit deferred (ending inventory, etc.)</td><td class="num-cell"><input class="fill" id="ni_defer" placeholder="$"></td></tr>
+      <tr><td>+ Prior-year UPSTREAM profit now realized (beginning inventory, etc.)</td><td class="num-cell"><input class="fill" id="ni_real" placeholder="$"></td></tr>
+      <tr class="subtot"><td>= Subsidiary realized net income</td><td class="num-cell"><span class="live" id="ni_realized">&mdash;</span></td></tr>
+      <tr class="total"><td>= Net income attributable to NCI <span class="hint">(&times; NCI %)</span></td><td class="num-cell"><span class="live nci" id="ni_out">&mdash;</span></td></tr>
+    </table>
+    <button class="reveal-btn" data-target="rNci">Show the method &#9656;</button>
+    <div class="reveal-body" id="rNci">
+      <h4>How the textbook builds the NCI income (LO 5-5)</h4>
+      <p><code>NCI income = NCI % &times; (sub reported income &minus; excess amortization &minus; current upstream deferral + prior upstream realization)</code>.</p>
+      <ul>
+        <li><strong>Why only upstream?</strong> Upstream profit lives in the subsidiary's income, so deferring/realizing it changes the subsidiary's <em>realized</em> income — which is what the NCI shares. Downstream profit is the parent's, so it never enters this line.</li>
+        <li><strong>Year of transfer:</strong> subtract the deferred amount (income the subsidiary recorded but hasn't truly earned).</li>
+        <li><strong>Year of realization:</strong> add it back (income now genuinely earned).</li>
+        <li><strong>Cross-check:</strong> the same upstream adjustments flow through the consolidated income statement; the NCI simply takes its percentage of the adjusted subsidiary figure.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ASSEMBLY ORDER -->
+  <section class="step" id="assembly">
+    <div class="step-head"><div class="num path">&#8803;</div><div>
+      <h2>Putting the worksheet together: entry order <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">The full sequence when transfers are present</div>
+    </div></div>
+    <p class="lead">The transfer entries don't replace the Chapter 3&ndash;4 routine; they're added to it. Enter the beginning-balance adjustments first, then the standard eliminations, then the transfer entries.</p>
+    <div class="flow">
+      <span class="box">*G / *GL</span><span class="arr">&rarr;</span>
+      <span class="box">(*C if cost method)</span><span class="arr">&rarr;</span>
+      <span class="box">S</span><span class="arr">&rarr;</span>
+      <span class="box">A</span><span class="arr">&rarr;</span>
+      <span class="box">I</span><span class="arr">&rarr;</span>
+      <span class="box">D</span><span class="arr">&rarr;</span>
+      <span class="box">E</span><span class="arr">&rarr;</span>
+      <span class="box">TI</span><span class="arr">&rarr;</span>
+      <span class="box">G</span><span class="arr">&rarr;</span>
+      <span class="box">TL / TA</span><span class="arr">&rarr;</span>
+      <span class="box">ED</span><span class="arr">&rarr;</span>
+      <span class="box">P</span>
+    </div>
+    <table>
+      <thead><tr><th>Entry</th><th>Purpose</th><th>New in Ch.5?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>*G / *GL</strong></td><td>Recognize prior-year deferred profit now realized (adjusts beginning Retained Earnings). Enter first.</td><td>Yes</td></tr>
+        <tr><td><strong>*C</strong></td><td>Convert the parent's beginning balances to equity basis (only under initial value / partial equity).</td><td>From Ch.3</td></tr>
+        <tr><td><strong>S</strong></td><td>Eliminate beginning subsidiary equity; split the NCI share.</td><td>From Ch.3&ndash;4</td></tr>
+        <tr><td><strong>A</strong></td><td>Bring in beginning unamortized excess fair value; split the NCI share.</td><td>From Ch.3&ndash;4</td></tr>
+        <tr><td><strong>I / D / E</strong></td><td>Remove the parent's income accrual / intra-entity dividends; record current excess amortization.</td><td>From Ch.3&ndash;4</td></tr>
+        <tr><td><strong>TI</strong></td><td>Eliminate current-year intra-entity Sales vs. Cost of Goods Sold.</td><td>Yes</td></tr>
+        <tr><td><strong>G</strong></td><td>Defer current-year unrealized profit in ending inventory.</td><td>Yes</td></tr>
+        <tr><td><strong>TL / TA</strong></td><td>Remove an intra-entity land or depreciable-asset gain and restore original balances.</td><td>Yes</td></tr>
+        <tr><td><strong>ED</strong></td><td>Remove the current year's excess depreciation on a transferred depreciable asset.</td><td>Yes</td></tr>
+        <tr><td><strong>P</strong></td><td>Eliminate any intra-entity receivable/payable (e.g., the unpaid land balance).</td><td>From Ch.3</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>Self-check:</strong> after the full set, the Investment account nets to zero, intra-entity Sales/COGS and gains are gone, and the NCI column shows beginning NCI + NCI share of realized income &minus; NCI share of dividends.</div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="step" id="check">
+    <div class="step-head"><div class="num">&#10003;</div><div>
+      <h2>Reliability checklist <span class="badge ex">STUDY AID</span></h2>
+      <div class="src">A self-verification routine — habits that catch the common transfer errors</div>
+    </div></div>
+    <p class="lead">The textbook gives the method; this checklist makes it <em>reliable</em>. Tick each before calling the problem done.</p>
+    <div class="progress"><span id="cl_bar"></span></div>
+    <div class="hint" id="cl_count">0 of 8 complete</div>
+    <ul class="checklist" id="cl">
+      <li><input type="checkbox"> I classified every transfer by direction (down/up) and type (inventory/land/depreciable) before computing.</li>
+      <li><input type="checkbox"> Gross profit rate used the transfer price as the base, and I applied it to inventory <em>still held</em> at year-end.</li>
+      <li><input type="checkbox"> Entry *G / *GL came first and adjusted the <em>seller's beginning</em> Retained Earnings.</li>
+      <li><input type="checkbox"> Entry TI removed both intra-entity Sales and the matching Cost of Goods Sold.</li>
+      <li><input type="checkbox"> Land deferral repeats every year (no unwind); equipment deferral unwinds via excess depreciation.</li>
+      <li><input type="checkbox"> Only UPSTREAM deferrals/realizations entered the NCI income computation; downstream did not.</li>
+      <li><input type="checkbox"> I eliminated the intra-entity receivable/payable (Entry P) for the unpaid transfer.</li>
+      <li><input type="checkbox"> Investment nets to zero; intra-entity sales, gains, and inflated bases are all removed.</li>
+    </ul>
+    <div class="toolbar">
+      <button class="btn ghost" id="resetBtn">Reset all inputs</button>
+      <button class="btn" id="printBtn">Print / Save as PDF</button>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="step" id="sources">
+    <div class="step-head"><div class="num">i</div><div>
+      <h2>Where each idea comes from</h2>
+      <div class="src">Textbook-first, with clearly separated outside ideas</div>
+    </div></div>
+    <div class="callout tb">
+      <strong><span class="badge tb">TEXTBOOK</span> Straight from your Chapter 5 reading.</strong> The spine of this workflow — deferral of unrealized intra-entity gross profit (LO 5-1 → 5-4), Entries TI / G / *G, the upstream-vs-downstream effect on the noncontrolling interest (LO 5-5), the land-transfer entries TL / *GL (LO 5-6), and the depreciable-asset entries TA / ED with excess depreciation (LO 5-7) — is taken directly from the chapter. The S&middot;A&middot;I&middot;D&middot;E&middot;P sequence and Entry *C carry over from Chapters 3&ndash;4. Use this as your primary method.
+    </div>
+    <div class="callout ex">
+      <strong><span class="badge ex">STUDY AID</span> Helpful ideas from general practice (not the textbook).</strong> Layered on top — they don't change the accounting, just make it more reliable:
+      <ul>
+        <li><strong>"Classify first" framing</strong> (direction &times; type) as an explicit Step 0 — a study-skills habit, not a textbook step.</li>
+        <li><strong>The entry-order flow strip and the reliability checklist</strong> — standard error-catching practice.</li>
+        <li><strong>The Investment-nets-to-zero and "intra-entity accounts all removed" self-checks</strong> — quick cross-verifications.</li>
+        <li><strong>Building the gross-profit and excess-depreciation schedules in a spreadsheet with cross-foot checks</strong> — an easy way to catch arithmetic slips.</li>
+      </ul>
+      <span class="hint">This workflow teaches the method only — it contains no solution figures, so you can practice every step without spoiling the answer. The Pullman / Spencer amounts shown are from the problem statement, not its solution.</span>
+    </div>
+  </section>
+
+  <footer>
+    Built for in-class demonstration and self-study &middot; Method sourced from Chapter 5 (Hoyle-style Advanced Accounting), LO 5-1 &rarr; 5-7, Exhibits 5.1&ndash;5.8 &middot; No solution figures are included.
+  </footer>
+</main>
+
+<script>
+(function(){
+  function num(v){ if(v==null) return NaN; var s=(""+v).replace(/[^0-9.\-]/g,""); return s===""?NaN:parseFloat(s); }
+  function fmt(n){ if(isNaN(n)) return "&mdash;"; return (n<0?"-$":"$")+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0}); }
+  function setLive(el,n){ if(el) el.innerHTML = isNaN(n) ? "&mdash;" : fmt(n); }
+
+  // reveal toggles
+  document.querySelectorAll(".reveal-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var t=document.getElementById(b.dataset.target);
+      var open=t.classList.toggle("open");
+      b.textContent=b.textContent.replace(/▸|▾/,open?"▾":"▸");
+    });
+  });
+  // decision trees
+  document.querySelectorAll(".opt").forEach(function(o){
+    o.addEventListener("click",function(){
+      o.classList.toggle("sel");
+      var out=document.getElementById(o.dataset.out);
+      out.classList.toggle("open", o.classList.contains("sel"));
+    });
+  });
+
+  // Acquisition recap
+  var qConsid=document.getElementById("q_consid"),qNci=document.getElementById("q_nci"),
+      qBook=document.getElementById("q_book"),qFin=document.getElementById("q_fin"),qLife=document.getElementById("q_life");
+  function calcAcq(){
+    var c=num(qConsid.value),n=num(qNci.value),b=num(qBook.value),f=num(qFin.value),l=num(qLife.value);
+    var total=(!isNaN(c)||!isNaN(n))?((c||0)+(n||0)):NaN; setLive(document.getElementById("q_total"),total);
+    var excess=(!isNaN(total)||!isNaN(b))?((total||0)-(b||0)):NaN; if(isNaN(total)&&isNaN(b))excess=NaN; setLive(document.getElementById("q_excess"),excess);
+    var resid=(!isNaN(excess)&&!isNaN(f))?(excess-f):(!isNaN(excess)?excess:NaN); setLive(document.getElementById("q_resid"),isNaN(f)?NaN:resid);
+    var amort=(!isNaN(f)&&!isNaN(l)&&l>0)?(f/l):NaN; setLive(document.getElementById("q_amort"),amort);
+  }
+  [qConsid,qNci,qBook,qFin,qLife].forEach(function(e){e.addEventListener("input",calcAcq);});
+
+  // Inventory
+  var ivTp=document.getElementById("iv_tp"),ivCost=document.getElementById("iv_cost"),
+      ivEnd=document.getElementById("iv_endheld"),ivBeg=document.getElementById("iv_begheld"),ivBegRate=document.getElementById("iv_begrate");
+  function calcInv(){
+    var tp=num(ivTp.value),cost=num(ivCost.value);
+    var rate=(!isNaN(tp)&&!isNaN(cost)&&tp!==0)?((tp-cost)/tp):NaN;
+    document.getElementById("iv_rate").innerHTML = isNaN(rate)?"&mdash;":(rate*100).toLocaleString(undefined,{maximumFractionDigits:2})+"%";
+    var endheld=num(ivEnd.value);
+    setLive(document.getElementById("iv_defer"), (!isNaN(rate)&&!isNaN(endheld))?(endheld*rate):NaN);
+    var begheld=num(ivBeg.value), begrate=num(ivBegRate.value);
+    setLive(document.getElementById("iv_realize"), (!isNaN(begheld)&&!isNaN(begrate))?(begheld*begrate/100):NaN);
+  }
+  [ivTp,ivCost,ivEnd,ivBeg,ivBegRate].forEach(function(e){e.addEventListener("input",calcInv);});
+
+  // Land
+  var ldTp=document.getElementById("ld_tp"),ldCost=document.getElementById("ld_cost");
+  function calcLand(){
+    var tp=num(ldTp.value),c=num(ldCost.value);
+    setLive(document.getElementById("ld_gain"), (!isNaN(tp)||!isNaN(c))?((tp||0)-(c||0)):NaN);
+  }
+  [ldTp,ldCost].forEach(function(e){e.addEventListener("input",calcLand);});
+
+  // Equipment
+  var eqTp=document.getElementById("eq_tp"),eqBv=document.getElementById("eq_bv"),
+      eqLife=document.getElementById("eq_life"),eqYrs=document.getElementById("eq_yrs");
+  function calcEq(){
+    var tp=num(eqTp.value),bv=num(eqBv.value),life=num(eqLife.value),yrs=num(eqYrs.value);
+    var gain=(!isNaN(tp)||!isNaN(bv))?((tp||0)-(bv||0)):NaN; if(isNaN(tp)&&isNaN(bv))gain=NaN;
+    setLive(document.getElementById("eq_gain"),gain);
+    var ed=(!isNaN(gain)&&!isNaN(life)&&life>0)?(gain/life):NaN;
+    setLive(document.getElementById("eq_ed"),ed);
+    var taRE=(!isNaN(gain)&&!isNaN(ed)&&!isNaN(yrs))?(gain-ed*yrs):NaN;
+    setLive(document.getElementById("eq_taRE"),taRE);
+    // remaining at year-end = gain - ed*(yrs+1 current year)
+    var remain=(!isNaN(gain)&&!isNaN(ed)&&!isNaN(yrs))?(gain-ed*(yrs+1)):NaN;
+    setLive(document.getElementById("eq_remain"),remain);
+  }
+  [eqTp,eqBv,eqLife,eqYrs].forEach(function(e){e.addEventListener("input",calcEq);});
+
+  // NCI income
+  var niPct=document.getElementById("ni_pct"),niInc=document.getElementById("ni_inc"),
+      niAm=document.getElementById("ni_amort"),niDef=document.getElementById("ni_defer"),niReal=document.getElementById("ni_real");
+  function calcNci(){
+    var inc=num(niInc.value),am=num(niAm.value),df=num(niDef.value),rl=num(niReal.value),pct=num(niPct.value);
+    var any=[inc,am,df,rl].some(function(x){return !isNaN(x);});
+    var realized=any?((inc||0)-(am||0)-(df||0)+(rl||0)):NaN;
+    setLive(document.getElementById("ni_realized"),realized);
+    setLive(document.getElementById("ni_out"), (!isNaN(realized)&&!isNaN(pct))?(realized*pct/100):NaN);
+  }
+  [niPct,niInc,niAm,niDef,niReal].forEach(function(e){e.addEventListener("input",calcNci);});
+
+  // checklist
+  var boxes=document.querySelectorAll("#cl input");
+  function upd(){
+    var done=0; boxes.forEach(function(b){ if(b.checked){done++; b.closest("li").classList.add("done");} else b.closest("li").classList.remove("done"); });
+    document.getElementById("cl_bar").style.width=(done/boxes.length*100)+"%";
+    document.getElementById("cl_count").textContent=done+" of "+boxes.length+" complete";
+  }
+  boxes.forEach(function(b){b.addEventListener("change",upd);});
+
+  // toolbar
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    document.querySelectorAll("input.fill").forEach(function(e){e.value="";});
+    document.querySelectorAll("#cl input").forEach(function(e){e.checked=false;});
+    document.querySelectorAll(".live").forEach(function(e){e.innerHTML="&mdash;";});
+    document.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");});
+    document.querySelectorAll(".tree-out").forEach(function(o){o.classList.remove("open");});
+    upd();
+  });
+  document.getElementById("printBtn").addEventListener("click",function(){window.print();});
+})();
+</script>
+</body>
+</html>
