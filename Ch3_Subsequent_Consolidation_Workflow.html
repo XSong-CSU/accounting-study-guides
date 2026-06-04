@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 3 Workflow — Consolidations Subsequent to Acquisition (Plush / Sofa)</title>
+<style>
+  :root{
+    --navy:#13294b; --navy2:#1f3a63; --teal:#0d7d7d; --teal-soft:#e6f3f3;
+    --gold:#c08a1e; --gold-soft:#fbf3df; --ink:#1c2530; --muted:#5a6675;
+    --line:#d8dee7; --bg:#f4f6f9; --card:#ffffff;
+    --tb:#1f6f4a; --tb-soft:#e7f3ec; --ex:#7a3da6; --ex-soft:#f3eafa;
+    --ok:#1f8a4c; --warn:#b25b00;
+    --shadow:0 1px 3px rgba(20,40,70,.08),0 6px 20px rgba(20,40,70,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;font-size:15.5px}
+  a{color:var(--teal)}
+  header.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;
+    padding:26px 22px 22px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px}
+  header.hero .wrap{padding:0}
+  .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#9fc6e8;font-weight:700}
+  header h1{margin:.25em 0 .15em;font-size:27px;line-height:1.18}
+  header p.sub{margin:.2em 0 0;color:#cfe0f1;font-size:15px;max-width:760px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .legend .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12.5px}
+  .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;
+    padding:2px 9px;border-radius:999px;vertical-align:middle}
+  .badge.tb{background:var(--tb-soft);color:var(--tb);border:1px solid #bfe0cd}
+  .badge.ex{background:var(--ex-soft);color:var(--ex);border:1px solid #ddc7ee}
+
+  nav.toc{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(20,40,70,.05)}
+  nav.toc .wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:9px 18px}
+  nav.toc a{font-size:12.5px;text-decoration:none;color:var(--navy);background:#eef2f7;
+    border:1px solid var(--line);padding:4px 10px;border-radius:7px;font-weight:600}
+  nav.toc a:hover{background:var(--teal-soft);border-color:#bfe0e0}
+
+  main{padding:24px 0 70px}
+  section.step{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:22px 24px;margin:18px 0}
+  .step-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+  .num{flex:none;width:40px;height:40px;border-radius:11px;background:var(--navy);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:18px}
+  .num.path{background:var(--teal)}
+  .step-head h2{margin:.1em 0;font-size:20px}
+  .step-head .src{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .lead{color:var(--muted);margin:.2em 0 1em}
+
+  .callout{border-left:4px solid var(--teal);background:var(--teal-soft);
+    border-radius:0 8px 8px 0;padding:11px 14px;margin:12px 0;font-size:14px}
+  .callout.gold{border-color:var(--gold);background:var(--gold-soft)}
+  .callout.tb{border-color:var(--tb);background:var(--tb-soft)}
+  .callout.ex{border-color:var(--ex);background:var(--ex-soft)}
+
+  .reveal-btn{appearance:none;cursor:pointer;border:1px dashed var(--teal);color:var(--teal);
+    background:#fff;border-radius:8px;padding:7px 13px;font-weight:700;font-size:13.5px;margin-top:6px}
+  .reveal-btn:hover{background:var(--teal-soft)}
+  .reveal-body{display:none;margin-top:10px;border:1px solid #bfe0e0;background:#f6fbfb;
+    border-radius:10px;padding:12px 14px;font-size:14px}
+  .reveal-body.open{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .reveal-body h4{margin:.2em 0 .4em;color:var(--navy)}
+  .reveal-body code{background:#eef2f7;padding:1px 6px;border-radius:5px;font-size:13px}
+
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  th{background:#eef2f7;font-weight:700;color:var(--navy)}
+  td.num-cell,th.num-cell{text-align:right;font-variant-numeric:tabular-nums}
+  tr.total td{background:#f7f9fc;font-weight:800;border-top:2px solid var(--navy)}
+  .data-table td.cr{color:#9a3b3b}
+  input.fill{width:130px;text-align:right;border:1px solid var(--line);border-radius:6px;
+    padding:5px 7px;font-size:14px;font-variant-numeric:tabular-nums;background:#fffdf6}
+  input.fill:focus{outline:2px solid var(--teal);border-color:var(--teal);background:#fff}
+  input.fill.wide{width:100%}
+  .live{display:inline-block;min-width:120px;text-align:right;font-weight:800;
+    font-variant-numeric:tabular-nums;color:var(--navy);background:#eef6f6;border-radius:6px;padding:4px 9px}
+  .verdict{margin-top:10px;font-weight:700}
+  .verdict.g{color:var(--ok)} .verdict.b{color:var(--warn)} .verdict.n{color:var(--muted)}
+
+  .tree{display:grid;gap:10px;margin:6px 0}
+  .opt{border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:#fafbfd}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft)}
+  .opt.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-soft)}
+  .opt b{color:var(--navy)}
+  .tree-out{display:none;margin-top:10px}
+  .tree-out.open{display:block}
+
+  .je{width:100%;font-size:14px}
+  .je td{vertical-align:middle}
+  .je .acct{width:auto}
+  .je .dr,.je .crc{width:140px}
+  .je .indent{padding-left:34px;color:var(--muted)}
+  .hint{color:var(--muted);font-size:12.5px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .checklist{list-style:none;padding:0;margin:8px 0}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);
+    border-radius:9px;margin-bottom:7px;background:#fafbfd}
+  .checklist input{margin-top:3px;width:18px;height:18px;accent-color:var(--teal)}
+  .checklist li.done{background:var(--tb-soft);border-color:#bfe0cd}
+  .progress{height:10px;border-radius:6px;background:#e6ebf2;overflow:hidden;margin:6px 0 2px}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--tb));transition:width .3s}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .btn{cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:8px;
+    padding:8px 14px;font-weight:700;font-size:13.5px}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn:hover{opacity:.92}
+  footer{color:var(--muted);font-size:12.5px;text-align:center;padding:24px 18px 50px}
+  .pill{font-size:11px;font-weight:700;background:#eef2f7;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--muted)}
+  details.data > summary{cursor:pointer;font-weight:700;color:var(--navy);padding:6px 0}
+  .entrytag{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;
+    background:var(--teal);color:#fff;font-weight:800;font-size:14px;margin-right:6px;vertical-align:middle}
+  .entrytag.opt-c{background:var(--gold)}
+  @media print{nav.toc{display:none}.reveal-btn,.btn,.toolbar{display:none}.reveal-body{display:block!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Advanced Accounting · Chapter 3 · Consolidations Subsequent to the Date of Acquisition</div>
+    <h1>A Reliable Workflow for Consolidating After the Acquisition Date</h1>
+    <p class="sub">A step-by-step problem-solving routine built <strong>directly from the textbook method</strong> (LO 3-1 → 3-4), applied to the Plush / Sofa comprehensive illustration. Fill in your own figures as you go — the reveal panels explain the <em>method</em>, never the answer.</p>
+    <div class="legend">
+      <span class="chip"><span class="badge tb">TEXTBOOK</span> Procedure taken from your Chapter 3 reading</span>
+      <span class="chip"><span class="badge ex">STUDY AID</span> General good-practice idea (outside the textbook)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#use">How to use</a>
+  <a href="#s0">0 · Which method?</a>
+  <a href="#s1">1 · Allocation</a>
+  <a href="#s2">2 · Amortize</a>
+  <a href="#s3">3 · Unamortized</a>
+  <a href="#cstar">*C · Convert</a>
+  <a href="#saide">S·A·I·D·E·P</a>
+  <a href="#compare">Same totals</a>
+  <a href="#check">Checklist</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+
+<main class="wrap">
+
+  <!-- HOW TO USE -->
+  <section class="step" id="use">
+    <div class="step-head"><div class="num">&#9733;</div><div>
+      <h2>How to use this workflow</h2>
+      <div class="src">Designed for both class demonstration and solo practice.</div>
+    </div></div>
+    <p class="lead">Chapter 2 valued a combination on day one. Chapter 3 asks what happens <strong>after</strong> the acquisition, once time has passed: the subsidiary earns income, pays dividends, and the acquisition-date fair-value adjustments slowly amortize. Work the boxes in order. Every box has three parts: <strong>the textbook rule</strong>, <strong>a place to write your own numbers</strong>, and a <strong>"Show the method" button</strong> that explains <em>how</em> to get the figure — the formula and the decision rule, but never the final answer.</p>
+    <div class="callout gold">
+      <strong>The big idea (textbook).</strong> A parent may keep its <em>Investment in Subsidiary</em> account three different ways internally — the <strong>equity</strong>, <strong>initial value</strong>, or <strong>partial equity</strong> method — but <strong>the consolidated statements come out identical either way</strong> (LO 3-4). The internal method only changes <em>which worksheet entries</em> you need to get there. Master the worksheet sequence and the choice of method stops being scary.
+    </div>
+    <div class="callout">
+      <strong>The two engines that drive every subsequent-period worksheet.</strong> (1) The subsidiary's <em>book value changes</em> over time — income added, dividends subtracted — so the equity you eliminate is the <em>beginning-of-current-year</em> balance, not the original. (2) The acquisition-date <em>excess fair value amortizes</em> each year, so the allocations you bring onto the worksheet shrink, and a fresh amortization expense appears every period.
+    </div>
+
+    <details class="data">
+      <summary>&#9658; Show the given problem data (Plush / Sofa)</summary>
+      <p class="hint">Reproduced from the problem statement (not the solution). Parentheses = credit balance.</p>
+      <div class="callout tb" style="margin-top:4px">
+        <strong>Acquisition facts.</strong> On <strong>January 1, 2022</strong>, Plush acquired <strong>all</strong> of Sofa's common stock for <strong>$842,000 cash</strong>. Sofa's <strong>book value</strong> on that date was <strong>$720,000</strong>. Fair-value differences at acquisition: a <strong>building</strong> undervalued by <strong>$72,000</strong> (12-year remaining life); <strong>equipment</strong> undervalued by <strong>$10,000</strong> (10-year remaining life); and an <strong>unrecorded licensing agreement</strong> worth <strong>$40,000</strong> (20-year life). All other Sofa assets and liabilities already equaled fair value.
+      </div>
+      <div class="callout tb">
+        <strong>Subsidiary results since acquisition.</strong> 2022: net income <strong>$100,000</strong>, dividends <strong>$30,000</strong>. 2023: net income <strong>$120,000</strong>, dividends <strong>$20,000</strong>. 2024: see the trial balance below; dividends <strong>$10,000</strong>. The consolidation is prepared as of <strong>December 31, 2024</strong> (the third year).
+      </div>
+      <p class="hint" style="margin-top:12px">Selected trial-balance amounts at 12/31/2024 (each includes all revenues and expenses for the year). Plush's own Investment and equity-earnings accounts are deliberately left out — finding the Investment balance is part of the problem.</p>
+      <table class="data-table">
+        <thead><tr>
+          <th>Account</th>
+          <th class="num-cell">Plush — Dr (Cr)</th>
+          <th class="num-cell">Sofa — Dr (Cr)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Cash and receivables</td><td class="num-cell">50,000</td><td class="num-cell">90,000</td></tr>
+          <tr><td>Inventory</td><td class="num-cell">280,000</td><td class="num-cell">260,000</td></tr>
+          <tr><td>Land</td><td class="num-cell">330,000</td><td class="num-cell">250,000</td></tr>
+          <tr><td>Buildings</td><td class="num-cell">1,540,000</td><td class="num-cell">460,000</td></tr>
+          <tr><td>Equipment</td><td class="num-cell">280,000</td><td class="num-cell">200,000</td></tr>
+          <tr><td>Liabilities</td><td class="num-cell cr">(480,000)</td><td class="num-cell cr">(260,000)</td></tr>
+          <tr><td>Common stock</td><td class="num-cell cr">(900,000)</td><td class="num-cell cr">(400,000)</td></tr>
+          <tr><td>Retained earnings, 1/1/24</td><td class="num-cell cr">(1,360,000)</td><td class="num-cell cr">(490,000)</td></tr>
+          <tr><td>Dividends declared</td><td class="num-cell">70,000</td><td class="num-cell">10,000</td></tr>
+          <tr><td>Revenues</td><td class="num-cell cr">(900,000)</td><td class="num-cell cr">(300,000)</td></tr>
+          <tr><td>Cost of goods sold</td><td class="num-cell">500,000</td><td class="num-cell">120,000</td></tr>
+          <tr><td>Depreciation expense</td><td class="num-cell">100,000</td><td class="num-cell">60,000</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">There are <em>no</em> intra-entity receivables, payables, or asset transfers in this problem, so the worksheet needs no Entry P. (Watch for those in other problems — see the S&middot;A&middot;I&middot;D&middot;E box.)</p>
+    </details>
+  </section>
+
+  <!-- STEP 0 METHOD -->
+  <section class="step" id="s0">
+    <div class="step-head"><div class="num">0</div><div>
+      <h2>Identify the parent's internal method first <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-2 &amp; LO 3-3 — equity vs. initial value vs. partial equity</div>
+    </div></div>
+    <p class="lead">Before touching the worksheet, decide how the parent has been carrying its <em>Investment in Subsidiary</em> account internally. This single fact decides whether you need an <strong>Entry *C</strong> and how <strong>Entry I</strong> behaves. Click the method the problem tells you the parent uses.</p>
+    <div class="tree">
+      <div class="opt" data-out="o-eq"><b>Equity method.</b> Parent accrues its share of subsidiary income as earned, records the excess-fair-value amortization, and reduces the Investment for dividends. <span class="hint">Account used: "Equity in subsidiary earnings."</span></div>
+      <div class="opt" data-out="o-iv"><b>Initial value (cost) method.</b> Parent leaves the Investment frozen at acquisition-date cost and records only <em>Dividend income</em> when the subsidiary declares dividends. <span class="hint">No income accrual, no amortization on the parent's books.</span></div>
+      <div class="opt" data-out="o-pe"><b>Partial equity method.</b> Parent accrues its share of subsidiary income as earned, but records <em>no</em> amortization and <em>no</em> deferrals. <span class="hint">Account used: "Equity in subsidiary earnings," before amortization.</span></div>
+    </div>
+    <div class="tree-out" id="o-eq"><div class="callout tb"><strong>Simplest path.</strong> Under the equity method the parent's books already carry full-accrual figures, so <strong>no Entry *C is needed</strong>. Go straight to the S&middot;A&middot;I&middot;D&middot;E sequence. Entry I removes "Equity in subsidiary earnings" (income net of amortization).</div></div>
+    <div class="tree-out" id="o-iv"><div class="callout tb"><strong>Needs conversion.</strong> Add an <strong>Entry *C</strong> to rebuild the parent's beginning Retained Earnings as if the equity method had always been used (prior-year income accruals <em>and</em> prior-year amortizations were never booked). And because the parent recorded <em>Dividend income</em> instead of an income accrual, <strong>Entry I eliminates Dividend income</strong> — and no separate Entry D is then needed.</div></div>
+    <div class="tree-out" id="o-pe"><div class="callout tb"><strong>Needs partial conversion.</strong> Add an <strong>Entry *C</strong>, but it only fixes the <em>prior-year amortizations</em> the parent skipped (income was already accrued). Entry I still removes "Equity in subsidiary earnings," and Entry D still removes the intra-entity dividends.</div></div>
+    <div class="callout gold"><strong>Whichever method you pick, the consolidated totals are identical (LO 3-4).</strong> The method only changes the <em>route</em> — specifically, whether <strong>*C</strong> appears and how <strong>I</strong> and <strong>D</strong> are written. Steps 1&ndash;3 below feed the worksheet the same way for all three methods, so do them once.</div>
+  </section>
+
+  <!-- STEP 1 ALLOCATION -->
+  <section class="step" id="s1">
+    <div class="step-head"><div class="num">1</div><div>
+      <h2>Rebuild the acquisition-date fair-value allocation <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-1, Exhibit 3.2 — the schedule every subsequent year leans on</div>
+    </div></div>
+    <p class="lead">Everything downstream depends on the original day-one allocation, so reconstruct it first. Consideration transferred minus the subsidiary's book value of net assets is the <strong>excess</strong>; assign the excess to each asset/liability for its fair-value&minus;book-value difference; whatever is left over is <strong>goodwill</strong>. Type your figures; totals update live.</p>
+    <table>
+      <tr><td>Consideration transferred</td><td class="num-cell"><input class="fill" id="a_consid" placeholder="$"></td></tr>
+      <tr><td>&minus; Subsidiary book value of net assets (at acquisition)</td><td class="num-cell"><input class="fill" id="a_book" placeholder="$"></td></tr>
+      <tr class="total"><td>= Excess of fair value over book value</td><td class="num-cell"><span class="live" id="a_excess">&mdash;</span></td></tr>
+      <tr><td colspan="2" class="hint" style="padding-top:12px"><strong>Allocate the excess</strong> to each account for its FV &minus; BV difference (enter a negative for an asset whose fair value is <em>below</em> book):</td></tr>
+      <tr><td>Building adjustment</td><td class="num-cell"><input class="fill alloc" placeholder="$"></td></tr>
+      <tr><td>Equipment adjustment</td><td class="num-cell"><input class="fill alloc" placeholder="$"></td></tr>
+      <tr><td>Licensing agreement (previously unrecorded)</td><td class="num-cell"><input class="fill alloc" placeholder="$"></td></tr>
+      <tr><td>Other identifiable adjustments (if any)</td><td class="num-cell"><input class="fill alloc" placeholder="$"></td></tr>
+      <tr class="total"><td>= Goodwill (residual)</td><td class="num-cell"><span class="live" id="a_goodwill">&mdash;</span></td></tr>
+    </table>
+    <div class="verdict n" id="a_verdict">Enter the consideration, book value, and allocations to see the residual.</div>
+    <button class="reveal-btn" data-target="r1">Show the method &#9656;</button>
+    <div class="reveal-body" id="r1">
+      <h4>How the textbook builds this schedule</h4>
+      <p><code>Excess = Consideration transferred &minus; Book value of subsidiary's net assets</code>. Then assign the excess account by account: each identifiable asset or liability gets the <strong>difference between its acquisition-date fair value and its book value</strong>, including intangibles the subsidiary never recorded. The amount still unassigned after all identifiable items is <strong>goodwill</strong>.</p>
+      <ul>
+        <li>If the identifiable adjustments use up the <em>entire</em> excess, goodwill is <strong>zero</strong> — a perfectly valid outcome, not an error.</li>
+        <li>A fair value <em>below</em> book value is a <strong>negative</strong> allocation (it will later <em>reduce</em> expense, not add to it).</li>
+        <li>This schedule is fixed on day one. In every later year you re-use it; you do not recompute the excess from new balances.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 2 AMORTIZE -->
+  <section class="step" id="s2">
+    <div class="step-head"><div class="num">2</div><div>
+      <h2>Build the annual excess-amortization schedule <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-1, Exhibit 3.3 — the expense consolidation adds every year</div>
+    </div></div>
+    <p class="lead">Each allocation with a finite life is amortized straight-line over its remaining life. Indefinite-lived items — land and <strong>goodwill</strong> — are <strong>not</strong> amortized. Enter each allocation and its remaining life; the annual amount and the total update live.</p>
+    <table>
+      <thead><tr><th>Allocation</th><th class="num-cell">Amount</th><th class="num-cell">Life (yrs)</th><th class="num-cell">Annual amortization</th></tr></thead>
+      <tbody>
+        <tr><td>Building</td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="yrs"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Equipment</td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="yrs"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Licensing agreement</td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="yrs"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr><td>Goodwill <span class="hint">(indefinite &rarr; leave life blank)</span></td><td class="num-cell"><input class="fill am-amt" style="width:100px" placeholder="$"></td><td class="num-cell"><input class="fill am-life" style="width:70px" placeholder="&mdash;"></td><td class="num-cell"><span class="live am-out">&mdash;</span></td></tr>
+        <tr class="total"><td colspan="3">Total annual excess amortization</td><td class="num-cell"><span class="live" id="am_total">&mdash;</span></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="r2">Show the method &#9656;</button>
+    <div class="reveal-body" id="r2">
+      <h4>How the textbook builds this figure</h4>
+      <p><code>Annual amortization = Allocation &divide; Remaining useful life</code> for every finite-lived item. Add them (a negative allocation contributes a <em>negative</em> amount, lowering the total). Points the chapter stresses:</p>
+      <ul>
+        <li><strong>Goodwill is never amortized</strong> — it is tested for impairment instead. Leave its life blank so it contributes nothing here.</li>
+        <li>Land and other indefinite-lived intangibles are also not amortized.</li>
+        <li>This single total becomes <strong>Entry E</strong> every year, and it is the amount that makes consolidated net income differ from the simple sum of the two companies' incomes.</li>
+        <li>A negative equipment allocation produces a <em>credit</em> to depreciation expense (it reduces expense) — keep its sign.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STEP 3 UNAMORTIZED -->
+  <section class="step" id="s3">
+    <div class="step-head"><div class="num">3</div><div>
+      <h2>Find the beginning-of-year unamortized balances <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-3, Exhibit 3.8 — the numbers Entry A actually uses in later years</div>
+    </div></div>
+    <p class="lead">Entry A does <strong>not</strong> use the original allocations after year one — it uses what is <em>left unamortized at the start of the current year</em>. For each finite-lived allocation: subtract the amortization already taken in the years <em>before</em> the current one. Enter the original allocation, the annual amount, and how many full years have already been amortized.</p>
+    <table>
+      <thead><tr><th>Allocation</th><th class="num-cell">Original</th><th class="num-cell">Annual &times; prior yrs</th><th class="num-cell">Unamortized at 1/1 (current yr)</th></tr></thead>
+      <tbody>
+        <tr><td>Building</td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><input class="fill un-amt" style="width:80px" placeholder="$/yr"> &times; <input class="fill un-yrs" style="width:55px" placeholder="yrs"></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Equipment</td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><input class="fill un-amt" style="width:80px" placeholder="$/yr"> &times; <input class="fill un-yrs" style="width:55px" placeholder="yrs"></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Licensing agreement</td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><input class="fill un-amt" style="width:80px" placeholder="$/yr"> &times; <input class="fill un-yrs" style="width:55px" placeholder="yrs"></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+        <tr><td>Goodwill <span class="hint">(unchanged)</span></td><td class="num-cell"><input class="fill un-orig" style="width:95px" placeholder="$"></td><td class="num-cell"><span class="hint">no amortization</span></td><td class="num-cell"><span class="live un-out">&mdash;</span></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="r3">Show the method &#9656;</button>
+    <div class="reveal-body" id="r3">
+      <h4>How the textbook builds these balances</h4>
+      <p><code>Unamortized at start of current year = Original allocation &minus; (Annual amortization &times; full years already elapsed)</code>. For a December year-end with a January 1 acquisition, "years already elapsed" is the number of complete years <em>before</em> the current one (e.g., consolidating 2024 for a 1/1/2022 acquisition &rarr; two prior years, 2022 and 2023).</p>
+      <ul>
+        <li><strong>Goodwill carries unchanged</strong> — no amortization, so its unamortized balance equals its original allocation every year.</li>
+        <li>These declining balances are exactly what <strong>Entry A</strong> brings onto the worksheet each year (Exhibit 3.8).</li>
+        <li>Do not confuse this beginning-of-year figure (Entry A) with the current-year expense (Entry E). A handles the cumulative leftover; E handles this year's slice.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ENTRY *C -->
+  <section class="step" id="cstar">
+    <div class="step-head"><div class="num path">*C</div><div>
+      <h2>Entry *C — convert the parent's books to equity basis <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-3, Exhibit 3.12 — only when the parent used initial value or partial equity</div>
+    </div></div>
+    <p class="lead">If Step 0 said the parent uses the <strong>initial value</strong> or <strong>partial equity</strong> method, its beginning Retained Earnings is missing prior-year effects. Entry *C (the asterisk means it deals with <em>prior</em> periods) puts them back <em>before</em> the normal sequence runs. If the parent uses the full <strong>equity</strong> method, skip this entire box.</p>
+    <table class="je">
+      <thead><tr><th class="acct">Account (initial value example)</th><th class="dr num-cell">Debit</th><th class="crc num-cell">Credit</th></tr></thead>
+      <tbody>
+        <tr><td>Investment in Subsidiary</td><td class="num-cell"><input class="fill" placeholder="$"></td><td></td></tr>
+        <tr><td class="indent">Retained Earnings, beginning (parent)</td><td></td><td class="num-cell"><input class="fill" placeholder="$"></td></tr>
+      </tbody>
+    </table>
+    <button class="reveal-btn" data-target="rC">Show the method &#9656;</button>
+    <div class="reveal-body" id="rC">
+      <h4>What *C corrects, by method</h4>
+      <ul>
+        <li><strong>Initial value method.</strong> The parent never accrued income and never amortized. *C adds the full prior-period effect: <code>(prior-years' subsidiary income &minus; dividends) &minus; prior-years' excess amortization</code>. Debit Investment, credit beginning Retained Earnings for that net amount.</li>
+        <li><strong>Partial equity method.</strong> The parent already accrued income but skipped amortization. *C only removes the <em>prior-years' amortization</em>: debit beginning Retained Earnings, credit Investment. Note the direction flips versus initial value.</li>
+        <li><strong>Equity method.</strong> Nothing to convert — <strong>no *C entry exists.</strong></li>
+      </ul>
+      <p class="hint">Self-check: *C only ever touches <em>prior</em> periods. The current year's income, dividends, and amortization are handled by Entries I, D, and E — never by *C.</p>
+    </div>
+  </section>
+
+  <!-- SAIDE SEQUENCE -->
+  <section class="step" id="saide">
+    <div class="step-head"><div class="num path">S&hellip;</div><div>
+      <h2>The worksheet sequence: S &middot; A &middot; I &middot; D &middot; E (&middot; P) <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-3, Exhibits 3.7 / 3.13 / 3.14 — the repeating routine for every period</div>
+    </div></div>
+    <p class="lead">After any *C, run these in order. Each fills in from a step above. Debits and credits within each entry must balance. The templates show the <em>shape</em> of each entry — fill your own amounts.</p>
+
+    <div class="callout"><strong>Memory hook.</strong> <strong>S</strong>tock equity out &middot; <strong>A</strong>llocations in &middot; <strong>I</strong>ncome accrual out &middot; <strong>D</strong>ividends out &middot; <strong>E</strong>xpense (amortization) in &middot; <strong>P</strong>ayables/receivables out. The first five appear in essentially every subsequent-period problem; <strong>P</strong> only when intra-entity balances exist.</p></div>
+
+    <h4 style="margin:16px 0 2px;color:var(--navy)"><span class="entrytag">S</span>Eliminate the subsidiary's <em>beginning</em> stockholders' equity</h4>
+    <p class="hint" style="margin:0 0 6px">Uses the <strong>beginning-of-current-year</strong> balances (Step toward Entry A pairs with this). This removes the book-value portion of the Investment.</p>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Common Stock (sub)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td>Additional Paid-in Capital (sub)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td>Retained Earnings, beginning (sub)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Investment in Subsidiary</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">A</span>Bring in the <em>unamortized</em> excess allocations (from Step 3)</h4>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Buildings / Equipment / Licensing / Goodwill (beginning unamortized)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Investment in Subsidiary</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid2">
+      <div>
+        <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">I</span>Eliminate the current-year income accrual</h4>
+        <p class="hint" style="margin:0 0 6px">Equity / partial equity: remove "Equity in subsidiary earnings." Initial value: remove "Dividend income" instead.</p>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Equity in Subsidiary Earnings <span class="hint">(or Dividend Income)</span></td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Investment in Subsidiary</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">D</span>Eliminate current-year intra-entity dividends</h4>
+        <p class="hint" style="margin:0 0 6px">Equity / partial equity only. Under initial value this is already handled inside Entry I.</p>
+        <table class="je">
+          <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+          <tbody>
+            <tr><td>Investment in Subsidiary</td><td class="num-cell"><input class="fill" style="width:85px"></td><td></td></tr>
+            <tr><td class="indent">Dividends Declared (sub)</td><td></td><td class="num-cell"><input class="fill" style="width:85px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">E</span>Record this year's excess amortization (from Step 2)</h4>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Depreciation Expense / Amortization Expense</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Buildings / Equipment / Licensing agreement</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin:18px 0 2px;color:var(--navy)"><span class="entrytag">P</span>Eliminate intra-entity receivable / payable <span class="badge ex" style="margin-left:6px">IF ANY</span></h4>
+    <p class="hint" style="margin:0 0 6px">Only when the two companies owe each other money. This problem has none, so skip it here — but build the habit of checking.</p>
+    <table class="je">
+      <thead><tr><th>Account</th><th class="dr num-cell">Dr</th><th class="crc num-cell">Cr</th></tr></thead>
+      <tbody>
+        <tr><td>Liabilities / Payable (intra-entity)</td><td class="num-cell"><input class="fill" style="width:95px"></td><td></td></tr>
+        <tr><td class="indent">Receivable (intra-entity)</td><td></td><td class="num-cell"><input class="fill" style="width:95px"></td></tr>
+      </tbody>
+    </table>
+
+    <button class="reveal-btn" data-target="rSAIDE">Show why each entry exists &#9656;</button>
+    <div class="reveal-body" id="rSAIDE">
+      <h4>The logic behind the letters (textbook)</h4>
+      <ul>
+        <li><strong>S</strong> removes the subsidiary's <em>beginning</em> equity so it is not double-counted, and offsets the book-value slice of the Investment account.</li>
+        <li><strong>A</strong> replaces that book value with the subsidiary's assets/liabilities at the <em>unamortized</em> fair-value amounts, plus any goodwill — using the beginning-of-year balances from Step 3.</li>
+        <li><strong>I</strong> removes the income the parent recorded on its own books this year, so consolidated revenue/expense reflect the subsidiary's <em>actual</em> accounts, not a one-line accrual.</li>
+        <li><strong>D</strong> removes the subsidiary's dividend declaration that the parent collected, so it is not counted as both a reduction of the Investment and a distribution.</li>
+        <li><strong>E</strong> records this year's slice of excess amortization on the fair-value adjustments — the expense that exists only at the consolidated level.</li>
+        <li><strong>P</strong> nets out any amounts the two companies owe each other, which are not real receivables/payables for the combined entity.</li>
+      </ul>
+      <p class="hint">Self-check: after S + A + I + D (and *C), the <strong>Investment in Subsidiary account should net to zero</strong> in the consolidated column. If it does not, an amount is wrong or an entry is missing.</p>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section class="step" id="compare">
+    <div class="step-head"><div class="num">=</div><div>
+      <h2>The payoff check: same totals, every method <span class="badge tb">TEXTBOOK</span></h2>
+      <div class="src">LO 3-4 — a parent's internal method never changes the consolidated result</div>
+    </div></div>
+    <p class="lead">This is both the chapter's headline idea and your best error-catcher. Whatever internal method the parent used, the consolidated statements are identical — the entries just differ on the way there. Two checks confirm you arrived correctly.</p>
+    <table>
+      <thead><tr><th>Verify this&hellip;</th><th>&hellip;and it confirms</th></tr></thead>
+      <tbody>
+        <tr><td>The <strong>Investment in Subsidiary</strong> account nets to <strong>zero</strong> after *C, S, A, I, D.</td><td>You eliminated the full investment (both its book-value and fair-value portions).</td></tr>
+        <tr><td>The <strong>"Equity in subsidiary earnings"</strong> / "Dividend income" line nets to <strong>zero</strong>.</td><td>The parent's internal income figure was fully removed; only the subsidiary's real accounts remain.</td></tr>
+        <tr><td>Consolidated <strong>net income</strong> = parent's own income + subsidiary's income &minus; excess amortization.</td><td>Entry E's amount is the only difference from a naive sum of the two incomes.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout gold"><strong>If you redid the problem under a different internal method and got a different consolidated total, something is wrong</strong> — not a feature of the method. The total is method-invariant; only *C, I, and D change form.</div>
+    <button class="reveal-btn" data-target="rCmp">Show what changes vs. what doesn't &#9656;</button>
+    <div class="reveal-body" id="rCmp">
+      <h4>Method-by-method (textbook)</h4>
+      <table>
+        <thead><tr><th>Entry</th><th>Equity</th><th>Initial value</th><th>Partial equity</th></tr></thead>
+        <tbody>
+          <tr><td>*C</td><td>Not used</td><td>Dr Investment / Cr R.E. (income net of amort.)</td><td>Dr R.E. / Cr Investment (amort. only)</td></tr>
+          <tr><td>S, A, E, P</td><td colspan="3" style="text-align:center">Identical across all three methods</td></tr>
+          <tr><td>I</td><td>Remove equity earnings (net of amort.)</td><td>Remove <em>Dividend income</em></td><td>Remove equity earnings (before amort.)</td></tr>
+          <tr><td>D</td><td>Used</td><td>Folded into I (no separate D)</td><td>Used</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="step" id="check">
+    <div class="step-head"><div class="num">&#10003;</div><div>
+      <h2>Reliability checklist <span class="badge ex">STUDY AID</span></h2>
+      <div class="src">A self-verification routine — habits that catch the common errors</div>
+    </div></div>
+    <p class="lead">The textbook gives the method; this checklist is a general study habit to make it <em>reliable</em>. Tick each item before you call the problem done.</p>
+    <div class="progress"><span id="cl_bar"></span></div>
+    <div class="hint" id="cl_count">0 of 8 complete</div>
+    <ul class="checklist" id="cl">
+      <li><input type="checkbox"> I identified the parent's internal method (equity / initial value / partial equity) before writing any entry.</li>
+      <li><input type="checkbox"> I reconstructed the day-one allocation schedule and let goodwill fall out as the residual (even if it is zero).</li>
+      <li><input type="checkbox"> My amortization schedule excludes goodwill and any indefinite-lived items.</li>
+      <li><input type="checkbox"> Entry A uses the <em>beginning-of-year unamortized</em> balances, not the original allocations.</li>
+      <li><input type="checkbox"> I added Entry *C only for initial value / partial equity, and used the correct direction.</li>
+      <li><input type="checkbox"> Entry I matches the method (equity earnings vs. dividend income), and Entry D is present/absent accordingly.</li>
+      <li><input type="checkbox"> Each entry balances, and the Investment account nets to zero after *C, S, A, I, D.</li>
+      <li><input type="checkbox"> I sanity-checked that the consolidated totals would be the same under any internal method (LO 3-4).</li>
+    </ul>
+    <div class="toolbar">
+      <button class="btn ghost" id="resetBtn">Reset all inputs</button>
+      <button class="btn" id="printBtn">Print / Save as PDF</button>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="step" id="sources">
+    <div class="step-head"><div class="num">i</div><div>
+      <h2>Where each idea comes from</h2>
+      <div class="src">Textbook-first, with clearly separated outside ideas</div>
+    </div></div>
+    <div class="callout tb">
+      <strong><span class="badge tb">TEXTBOOK</span> Straight from your Chapter 3 reading.</strong> The spine of this workflow — the three internal investment methods (LO 3-2, Exhibit 3.1), the fair-value allocation and annual amortization schedules (Exhibits 3.2&ndash;3.3, 3.8), the worksheet entries <strong>*C, S, A, I, D, E, P</strong> and how they vary by method (LO 3-3, Exhibits 3.7, 3.13, 3.14, 3.16), and the principle that the internal method does not change the consolidated result (LO 3-4) — is taken directly from the chapter. Use this as your primary method.
+    </div>
+    <div class="callout ex">
+      <strong><span class="badge ex">STUDY AID</span> Helpful ideas from general practice (not the textbook).</strong> These are common study/teaching techniques you may layer on top — they don't change the accounting, just make it more reliable:
+      <ul>
+        <li><strong>"Identify the method first" framing</strong> as an explicit Step 0 decision tree — a study-skills habit, not a textbook step.</li>
+        <li><strong>The S&middot;A&middot;I&middot;D&middot;E&middot;P memory hook and the reliability checklist</strong> — standard error-catching practice.</li>
+        <li><strong>The Investment-nets-to-zero and income-line-nets-to-zero self-checks</strong> — quick cross-verifications you can run on any subsequent-period problem.</li>
+        <li><strong>Building the allocation and amortization schedules in a spreadsheet with cross-foot checks</strong> — laying the steps out and cross-footing the totals is an easy way to catch arithmetic slips.</li>
+      </ul>
+      <span class="hint">This workflow teaches the method only — it contains no solution figures, so you can practice every step without spoiling the answer. The Plush / Sofa amounts shown are from the problem statement, not its solution.</span>
+    </div>
+  </section>
+
+  <footer>
+    Built for in-class demonstration and self-study &middot; Method sourced from Chapter 3 (Hoyle-style Advanced Accounting), LO 3-1 &rarr; 3-4, Exhibits 3.1&ndash;3.16 &middot; No solution figures are included.
+  </footer>
+</main>
+
+<script>
+(function(){
+  function num(v){ if(v==null) return NaN; var s=(""+v).replace(/[^0-9.\-]/g,""); return s===""?NaN:parseFloat(s); }
+  function fmt(n){ if(isNaN(n)) return "&mdash;"; return (n<0?"-$":"$")+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0}); }
+  function setLive(el,n){ el.innerHTML = isNaN(n) ? "&mdash;" : fmt(n); }
+
+  // reveal toggles
+  document.querySelectorAll(".reveal-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var t=document.getElementById(b.dataset.target);
+      var open=t.classList.toggle("open");
+      b.textContent=b.textContent.replace(/▸|▾/,open?"▾":"▸");
+    });
+  });
+
+  // method decision tree
+  document.querySelectorAll(".opt").forEach(function(o){
+    o.addEventListener("click",function(){
+      o.classList.toggle("sel");
+      var out=document.getElementById(o.dataset.out);
+      out.classList.toggle("open", o.classList.contains("sel"));
+    });
+  });
+
+  // Step 1 allocation
+  var aConsid=document.getElementById("a_consid"), aBook=document.getElementById("a_book");
+  function calcAlloc(){
+    var consid=num(aConsid.value), book=num(aBook.value);
+    var excess = (!isNaN(consid)||!isNaN(book)) ? (consid||0)-(book||0) : NaN;
+    if(isNaN(consid)&&isNaN(book)) excess=NaN;
+    setLive(document.getElementById("a_excess"), excess);
+    var allocSum=0, anyAlloc=false;
+    document.querySelectorAll(".alloc").forEach(function(e){ var v=num(e.value); if(!isNaN(v)){allocSum+=v;anyAlloc=true;} });
+    var vEl=document.getElementById("a_verdict"), gEl=document.getElementById("a_goodwill");
+    if(isNaN(excess)){ gEl.innerHTML="&mdash;"; vEl.className="verdict n"; vEl.textContent="Enter the consideration, book value, and allocations to see the residual."; return; }
+    var goodwill = excess - allocSum;
+    setLive(gEl, goodwill);
+    if(!anyAlloc){ vEl.className="verdict n"; vEl.textContent="Now allocate the excess to specific assets/liabilities; the residual is goodwill."; }
+    else if(Math.abs(goodwill)<0.5){ vEl.className="verdict g"; vEl.textContent="The identifiable allocations use up the entire excess → goodwill is zero (a valid outcome)."; }
+    else if(goodwill>0){ vEl.className="verdict g"; vEl.textContent="Excess remains after identifiable items → the residual is GOODWILL (an indefinite-lived asset)."; }
+    else{ vEl.className="verdict b"; vEl.textContent="You allocated more than the excess → re-check your fair-value differences; a negative residual usually signals an error or a bargain purchase."; }
+  }
+  [aConsid,aBook].forEach(function(e){e.addEventListener("input",calcAlloc);});
+  document.querySelectorAll(".alloc").forEach(function(e){e.addEventListener("input",calcAlloc);});
+
+  // Step 2 amortization
+  function calcAmort(){
+    var rows=document.querySelectorAll("#s2 tbody tr"); var total=0, any=false;
+    rows.forEach(function(r){
+      var amt=r.querySelector(".am-amt"), life=r.querySelector(".am-life"), out=r.querySelector(".am-out");
+      if(!amt||!life||!out) return;
+      var a=num(amt.value), l=num(life.value);
+      if(!isNaN(a)&&!isNaN(l)&&l>0){ var ann=a/l; setLive(out,ann); total+=ann; any=true; }
+      else if(!isNaN(a)){ out.innerHTML="$0"; /* indefinite life */ if(life.value.trim()===""){} }
+      else { out.innerHTML="&mdash;"; }
+    });
+    setLive(document.getElementById("am_total"), any?total:NaN);
+  }
+  document.querySelectorAll(".am-amt,.am-life").forEach(function(e){e.addEventListener("input",calcAmort);});
+
+  // Step 3 unamortized
+  function calcUnam(){
+    document.querySelectorAll("#s3 tbody tr").forEach(function(r){
+      var orig=r.querySelector(".un-orig"), amt=r.querySelector(".un-amt"), yrs=r.querySelector(".un-yrs"), out=r.querySelector(".un-out");
+      if(!orig||!out) return;
+      var o=num(orig.value);
+      if(isNaN(o)){ out.innerHTML="&mdash;"; return; }
+      if(!amt||!yrs){ setLive(out,o); return; } // goodwill row: unchanged
+      var a=num(amt.value), y=num(yrs.value);
+      var taken = (!isNaN(a)&&!isNaN(y)) ? a*y : 0;
+      setLive(out, o-taken);
+    });
+  }
+  document.querySelectorAll(".un-orig,.un-amt,.un-yrs").forEach(function(e){e.addEventListener("input",calcUnam);});
+
+  // checklist
+  var boxes=document.querySelectorAll("#cl input");
+  function upd(){
+    var done=0; boxes.forEach(function(b){ if(b.checked){done++; b.closest("li").classList.add("done");} else b.closest("li").classList.remove("done"); });
+    document.getElementById("cl_bar").style.width=(done/boxes.length*100)+"%";
+    document.getElementById("cl_count").textContent=done+" of "+boxes.length+" complete";
+  }
+  boxes.forEach(function(b){b.addEventListener("change",upd);});
+
+  // toolbar
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    document.querySelectorAll("input.fill").forEach(function(e){e.value="";});
+    document.querySelectorAll("#cl input").forEach(function(e){e.checked=false;});
+    document.querySelectorAll(".live").forEach(function(e){e.innerHTML="&mdash;";});
+    document.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");});
+    document.querySelectorAll(".tree-out").forEach(function(o){o.classList.remove("open");});
+    calcAlloc(); upd();
+    document.getElementById("a_verdict").className="verdict n";
+    document.getElementById("a_verdict").textContent="Enter the consideration, book value, and allocations to see the residual.";
+  });
+  document.getElementById("printBtn").addEventListener("click",function(){window.print();});
+})();
+</script>
+</body>
+</html>
