@@ -546,4 +546,23 @@
   function upd(){
     var done=0; boxes.forEach(function(b){ if(b.checked){done++; b.closest("li").classList.add("done");} else b.closest("li").classList.remove("done"); });
     document.getElementById("cl_bar").style.width=(done/boxes.length*100)+"%";
-    document.getElementById("cl_count").textC
+    document.getElementById("cl_count").textContent=done+" of "+boxes.length+" complete";
+  }
+  boxes.forEach(function(b){b.addEventListener("change",upd);});
+
+  // toolbar
+  var resetBtn=document.getElementById("resetBtn");
+  if(resetBtn) resetBtn.addEventListener("click",function(){
+    document.querySelectorAll("input.fill").forEach(function(e){e.value="";});
+    document.querySelectorAll("#cl input").forEach(function(e){e.checked=false;});
+    document.querySelectorAll(".live").forEach(function(e){e.textContent="—";});
+    document.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");});
+    document.querySelectorAll(".tree-out").forEach(function(o){o.classList.remove("open");});
+    calcConsid(); calcNet(); upd();
+  });
+  var printBtn=document.getElementById("printBtn");
+  if(printBtn) printBtn.addEventListener("click",function(){window.print();});
+})();
+</script>
+</body>
+</html>
